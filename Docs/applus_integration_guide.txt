@@ -1,0 +1,1758 @@
+===============================================================================
+APPLUS ERP INTEGRATION FOR TRAVEL PLANNER - CUSTOMER DATA
+HYBRID APPROACH: XML/CSV EXPORT + MANUAL ENTRY
+===============================================================================
+Document Purpose: Implement a practical customer data solution that combines
+automated APplus exports with manual data entry, designed to work without 
+requiring vendor support or complex API integration.
+
+APPROACH SUMMARY:
+- Primary: Manual customer entry through web interface (immediate functionality)
+- Secondary: CSV bulk upload for mass imports
+- Tertiary: Automated XML/CSV import from APplus exports (when available)
+
+This pragmatic approach ensures the travel planner can be used immediately
+while gradually adding automation as APplus integration becomes available.
+
+===============================================================================
+1. APPLUS ERP INTEGRATION ARCHITECTURE
+===============================================================================
+
+1.1 APplus Integration Framework (BIF)
+---------------------------------------
+APplus uses a proprietary integration framework called:
+**BIF (Business Integration Framework)** - Available since Version 6.3
+
+Key Components:
+- ECom: APplus-specific transport mechanism
+- XML Parser: Validates data against APplus XML definitions
+- Message Bus: Controlled data exchange
+- OpenTrans Format: Based on Fraunhofer Institute standard
+
+Integration Method:
+- XML-based data exchange
+- Web services for sending/receiving data
+- EDI capabilities (Electronic Data Interchange)
+- Structured around standardized XML schemas
+
+1.2 Data Exchange Protocol
+--------------------------
+APplus → External System:
+1. Data extracted from APplus modules
+2. Converted to XML format (OpenTrans standard)
+3. Transmitted via APplus web service
+4. Received by external system (your travel planner)
+5. Parsed and integrated into travel planner database
+
+External System → APplus:
+1. Data prepared in XML format
+2. Sent to BIF module via ECom transport
+3. Syntactic validation against APplus XML definitions
+4. Forwarded to appropriate APplus functional modules
+5. Processed as database objects
+
+===============================================================================
+2. CUSTOMER DATA EXTRACTION OPTIONS
+===============================================================================
+
+**SELECTED APPROACH: XML Export/Import with Manual Entry Fallback**
+
+Given the constraint of limited vendor support, we'll implement a pragmatic
+solution that balances automation with flexibility.
+
+Option A: XML/CSV Export and Import (PRIMARY - RECOMMENDED)
+-----------------------------------------------------------
+Pros:
++ No vendor assistance required
++ Works with any APplus version
++ Simple and reliable
++ Easy to troubleshoot
++ No licensing concerns
++ Complete control over process
++ Can be semi-automated
+
+Cons:
+- Not real-time (batch processing)
+- Requires scheduled exports from APplus
+- Manual step involved initially
+- Slight sync delays
+
+Implementation:
+1. Configure APplus to export customer data (XML or CSV)
+2. Set up scheduled export task in APplus
+3. Place files in monitored folder (network drive/FTP/cloud)
+4. Build automatic file processor in travel planner
+5. Import customer data when new file detected
+6. Handle duplicate detection and updates
+7. Generate import reports
+
+Option B: Manual Data Entry (FALLBACK/SUPPLEMENT)
+-------------------------------------------------
+Pros:
++ No APplus integration needed
++ Immediate data entry
++ Full control over data quality
++ Useful for one-off customers
++ No technical barriers
++ Works offline
+
+Cons:
+- Time-consuming for large volumes
+- Prone to human error
+- No automatic sync
+- Requires training
+
+Implementation:
+1. Build user-friendly customer entry form
+2. Include all required fields
+3. Add validation and error checking
+4. Allow bulk import via copy-paste
+5. Enable CSV upload for manual imports
+6. Provide templates for data entry
+
+Option C: Hybrid Approach (RECOMMENDED FINAL SOLUTION)
+------------------------------------------------------
+Combine automated XML import with manual entry capability:
+
+Benefits:
++ Leverages APplus data when available
++ Allows manual additions/corrections
++ Best of both worlds
++ Flexible and resilient
++ Can handle exceptions
+
+Architecture:
+[APplus] → Export (XML/CSV) → [Network Folder] → [File Watcher] → [Import Processor]
+                                                                         ↓
+[Manual Entry Form] ────────────────────────────────────→ [Customer Database]
+
+Implementation Priority:
+1. Build manual entry system FIRST (immediate functionality)
+2. Add XML/CSV import capability SECOND (automation)
+3. Implement file monitoring THIRD (full automation)
+
+===============================================================================
+3. CUSTOMER DATA MAPPING
+===============================================================================
+
+3.1 APplus Customer Fields (Typical Structure)
+----------------------------------------------
+Based on standard ERP customer management, APplus likely includes:
+
+Customer Master Data:
+- Customer ID (Kundennummer)
+- Company Name (Firmenname)
+- Contact Person (Ansprechpartner)
+- Email Address (E-Mail)
+- Phone Number (Telefonnummer)
+- Mobile Number (Mobilnummer)
+- Street Address (Straße)
+- City (Stadt/Ort)
+- Postal Code (PLZ)
+- Country (Land)
+- Customer Type (Kundentyp)
+- Payment Terms (Zahlungsbedingungen)
+- Credit Limit (Kreditlimit)
+- Customer Status (Status)
+- Created Date (Erstellungsdatum)
+- Last Modified (Letzte Änderung)
+
+Additional Fields (CRM Module):
+- Sales Representative (Vertriebsmitarbeiter)
+- Customer Category (Kundenkategorie)
+- Industry Sector (Branche)
+- Annual Revenue (Jahresumsatz)
+- Notes/Comments (Bemerkungen)
+
+3.2 Travel Planner Schema Mapping
+---------------------------------
+APplus Field               → Travel Planner Field
+---------------------------------------------------
+Customer ID                → customer_id (external_id)
+Company Name               → name (or company_name)
+Contact Person             → contact_name
+Email Address              → email
+Phone Number               → phone
+Mobile Number              → mobile
+Street Address             → origin.address
+City                       → origin.city
+Postal Code                → origin.postal_code
+Country                    → origin.country
+Customer Status            → is_active
+Created Date               → import_date
+
+New Fields in Travel Planner:
+- origin.latitude (geocoded from address)
+- origin.longitude (geocoded from address)
+- origin.airport_code (determined from city)
+- cost_share_percentage (default: 0, user adjustable)
+- preferences (empty object, user fills)
+- data_source (enum: 'applus_import', 'manual_entry', 'csv_upload')
+- can_edit_synced_fields (boolean: false for APplus imports, true for manual)
+
+3.3 Manual Entry Fields (UI Form)
+---------------------------------
+Required Fields:
+* Name/Company Name (text input)
+* Email (email input with validation)
+* Phone Number (phone input with formatting)
+* City or Full Address (text input with autocomplete)
+* Country (dropdown with search)
+
+Optional Fields:
+- Contact Person Name (if company)
+- Mobile Number (secondary contact)
+- Full Street Address (auto-completes from city)
+- Postal Code
+- Notes/Comments (textarea)
+
+Auto-Generated Fields:
+- Customer ID (system generated UUID)
+- Coordinates (geocoded from address)
+- Nearest Airport (calculated from coordinates)
+- Created Date (timestamp)
+- Last Modified (timestamp)
+- Data Source (set to 'manual_entry')
+
+Form Features:
+- Real-time address validation
+- Google Maps address autocomplete
+- Duplicate detection (checks existing email/phone)
+- Preview mode before saving
+- Bulk entry (multiple customers at once)
+- CSV/Excel template download for bulk upload
+
+===============================================================================
+4. IMPLEMENTATION ARCHITECTURE
+===============================================================================
+
+4.1 System Overview (Hybrid Approach)
+-------------------------------------
+
+                    ┌─────────────────────────┐
+                    │   APplus ERP System     │
+                    │   (Customer Database)   │
+                    └────────┬────────────────┘
+                             │
+                    Manual Export (XML/CSV)
+                             │
+                             ↓
+        ┌────────────────────────────────────────┐
+        │  Shared Location (Network/FTP/Cloud)   │
+        │  - customers_export_YYYY-MM-DD.xml     │
+        │  - customers_export_YYYY-MM-DD.csv     │
+        └────────┬───────────────────────────────┘
+                 │
+        File Watcher (Monitors for new files)
+                 │
+                 ↓
+        ┌────────────────────┐
+        │  Import Processor  │───→ Validation
+        │  - Parse XML/CSV   │───→ Deduplication
+        │  - Transform Data  │───→ Geocoding
+        │  - Bulk Insert     │───→ Airport Lookup
+        └────────┬───────────┘
+                 │
+                 ↓
+        ┌──────────────────────────────┐
+        │   Travel Planner Database    │◄───────┐
+        │   (Customer Master Table)    │        │
+        └──────────┬───────────────────┘        │
+                   │                             │
+                   ↓                    Manual Data Entry
+        ┌──────────────────────────┐            │
+        │ Travel Planner Web App   │────────────┘
+        │ - Customer Management    │
+        │ - Manual Entry Forms     │
+        │ - Trip Planning          │
+        │ - Cost Calculation       │
+        └──────────────────────────┘
+
+4.2 Data Flow Options
+---------------------
+
+Flow 1: APplus Export → Automated Import
+[User exports from APplus] → [File saved to shared folder] → 
+[File watcher detects new file] → [Import processor runs] → 
+[Data validated & geocoded] → [Database updated] → 
+[Import report generated] → [Email notification sent]
+
+Flow 2: Manual Entry
+[User opens travel planner] → [Clicks "Add Customer"] → 
+[Fills form with customer details] → [Form validation] → 
+[Auto-geocoding runs] → [Airport lookup] → [Save to database] → 
+[Customer added to system]
+
+Flow 3: CSV Bulk Upload
+[User prepares CSV file] → [Uploads via web interface] → 
+[CSV parser validates format] → [Preview import (show issues)] → 
+[User confirms import] → [Batch processing] → 
+[Import summary displayed]
+
+4.3 File Monitoring Strategy
+----------------------------
+Option A: Polling (Simple)
+- Check folder every 15-60 minutes
+- Look for files matching pattern: customers_*.xml or customers_*.csv
+- Process new files, archive old ones
+- Simple to implement
+
+Option B: File System Watcher (Recommended)
+- Real-time monitoring using Node.js 'chokidar' or Python 'watchdog'
+- Immediate processing when file appears
+- Lower system overhead
+- More responsive
+
+Option C: Scheduled Task
+- Daily scheduled task at specific time (e.g., 3 AM)
+- Process all files from previous day
+- Predictable timing
+- Good for batch operations
+
+===============================================================================
+5. TECHNICAL IMPLEMENTATION EXAMPLE
+===============================================================================
+
+5.1 REST API Endpoints (Your Travel Planner)
+--------------------------------------------
+
+CUSTOMER IMPORT (APplus XML/CSV)
+GET /api/customers/import/status
+- Check status of last import
+- Returns: {last_import_date, customers_imported, status, errors}
+
+POST /api/customers/import/trigger
+- Manually trigger import from monitored folder
+- Returns: {job_id, status, message}
+
+GET /api/customers/import/history
+- List import history with details
+- Returns: array of import records
+
+POST /api/customers/import/upload
+- Upload CSV/XML file directly via web interface
+- Body: multipart/form-data with file
+- Returns: {preview: array, total_records, issues: array}
+
+POST /api/customers/import/confirm
+- Confirm and execute CSV import after preview
+- Body: {import_id, skip_errors: boolean}
+- Returns: {imported_count, skipped_count, errors}
+
+MANUAL CUSTOMER MANAGEMENT
+GET /api/customers
+- List all customers
+- Query params: 
+  * ?source=applus|manual|csv (filter by source)
+  * ?search=term (search by name/email)
+  * ?page=1&limit=20 (pagination)
+- Returns: {customers: array, total, page, pages}
+
+GET /api/customers/:id
+- Get single customer details
+- Returns: customer object with full details
+
+POST /api/customers
+- Manually add customer
+- Body: {
+    name: string (required),
+    email: string (required),
+    phone: string (required),
+    contact_name: string (optional),
+    address: {
+      street: string (optional),
+      city: string (required),
+      postal_code: string (optional),
+      country: string (required)
+    },
+    notes: string (optional)
+  }
+- Returns: created customer with geocoded coordinates
+
+PUT /api/customers/:id
+- Update customer details
+- Can only edit if data_source is 'manual_entry' or can_edit_synced_fields=true
+- Body: partial customer object
+- Returns: updated customer
+
+DELETE /api/customers/:id
+- Soft delete customer (mark as inactive)
+- Returns: {success: true, message}
+
+POST /api/customers/bulk
+- Add multiple customers at once
+- Body: {customers: array of customer objects}
+- Returns: {created: array, errors: array}
+
+GEOCODING & VALIDATION
+POST /api/customers/geocode
+- Geocode an address
+- Body: {address, city, country}
+- Returns: {latitude, longitude, formatted_address}
+
+POST /api/customers/validate-duplicate
+- Check if customer already exists
+- Body: {email, phone}
+- Returns: {is_duplicate: boolean, existing_customer: object}
+
+GET /api/customers/airports/nearest
+- Find nearest airport to coordinates
+- Query: ?lat=40.7128&lng=-74.0060
+- Returns: {airport_code, airport_name, distance_km}
+
+TEMPLATES & EXPORT
+GET /api/customers/template/csv
+- Download CSV template for bulk import
+- Returns: CSV file with headers and example row
+
+GET /api/customers/export
+- Export customers to CSV/Excel
+- Query: ?format=csv|xlsx&source=all|applus|manual
+- Returns: File download
+
+5.2 Manual Entry Form Implementation (React Example)
+---------------------------------------------------
+```javascript
+import React, { useState } from 'react';
+import { geocodeAddress, validateDuplicate } from './api';
+
+function CustomerForm({ onSave, onCancel }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    contact_name: '',
+    address: {
+      street: '',
+      city: '',
+      postal_code: '',
+      country: ''
+    },
+    notes: ''
+  });
+  
+  const [errors, setErrors] = useState({});
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const [duplicateWarning, setDuplicateWarning] = useState(null);
+  
+  // Real-time email validation
+  const handleEmailChange = async (email) => {
+    setFormData({...formData, email});
+    
+    if (email.includes('@')) {
+      const result = await validateDuplicate({ email });
+      if (result.is_duplicate) {
+        setDuplicateWarning(`Customer exists: ${result.existing_customer.name}`);
+      } else {
+        setDuplicateWarning(null);
+      }
+    }
+  };
+  
+  // Address autocomplete integration
+  const handleAddressSelect = async (address) => {
+    setIsGeocoding(true);
+    try {
+      const geoResult = await geocodeAddress(address);
+      setFormData({
+        ...formData,
+        address: {
+          street: geoResult.street,
+          city: geoResult.city,
+          postal_code: geoResult.postal_code,
+          country: geoResult.country
+        }
+      });
+    } catch (error) {
+      setErrors({...errors, address: 'Could not geocode address'});
+    } finally {
+      setIsGeocoding(false);
+    }
+  };
+  
+  // Form validation
+  const validate = () => {
+    const newErrors = {};
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    }
+    
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      newErrors.email = 'Valid email is required';
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Phone number is required';
+    }
+    
+    if (!formData.address.city.trim()) {
+      newErrors.city = 'City is required';
+    }
+    
+    if (!formData.address.country.trim()) {
+      newErrors.country = 'Country is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+  // Submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validate()) {
+      return;
+    }
+    
+    try {
+      const savedCustomer = await onSave(formData);
+      alert(`Customer ${savedCustomer.name} added successfully!`);
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+    }
+  };
+  
+  return (
+    <form onSubmit={handleSubmit} className="customer-form">
+      <h2>Add New Customer</h2>
+      
+      {/* Name Field */}
+      <div className="form-group">
+        <label htmlFor="name">Name / Company Name *</label>
+        <input
+          id="name"
+          type="text"
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          className={errors.name ? 'error' : ''}
+          placeholder="ABC Corporation"
+        />
+        {errors.name && <span className="error-message">{errors.name}</span>}
+      </div>
+      
+      {/* Contact Person */}
+      <div className="form-group">
+        <label htmlFor="contact_name">Contact Person</label>
+        <input
+          id="contact_name"
+          type="text"
+          value={formData.contact_name}
+          onChange={(e) => setFormData({...formData, contact_name: e.target.value})}
+          placeholder="John Smith (optional)"
+        />
+      </div>
+      
+      {/* Email Field */}
+      <div className="form-group">
+        <label htmlFor="email">Email *</label>
+        <input
+          id="email"
+          type="email"
+          value={formData.email}
+          onChange={(e) => handleEmailChange(e.target.value)}
+          className={errors.email ? 'error' : ''}
+          placeholder="contact@company.com"
+        />
+        {errors.email && <span className="error-message">{errors.email}</span>}
+        {duplicateWarning && (
+          <span className="warning-message">{duplicateWarning}</span>
+        )}
+      </div>
+      
+      {/* Phone Field */}
+      <div className="form-group">
+        <label htmlFor="phone">Phone Number *</label>
+        <input
+          id="phone"
+          type="tel"
+          value={formData.phone}
+          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+          className={errors.phone ? 'error' : ''}
+          placeholder="+1 234 567 8900"
+        />
+        {errors.phone && <span className="error-message">{errors.phone}</span>}
+      </div>
+      
+      {/* Address Fields */}
+      <fieldset className="address-fieldset">
+        <legend>Address</legend>
+        
+        <div className="form-group">
+          <label htmlFor="street">Street Address</label>
+          <input
+            id="street"
+            type="text"
+            value={formData.address.street}
+            onChange={(e) => setFormData({
+              ...formData, 
+              address: {...formData.address, street: e.target.value}
+            })}
+            placeholder="123 Main Street"
+          />
+        </div>
+        
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="city">City *</label>
+            <input
+              id="city"
+              type="text"
+              value={formData.address.city}
+              onChange={(e) => setFormData({
+                ...formData, 
+                address: {...formData.address, city: e.target.value}
+              })}
+              className={errors.city ? 'error' : ''}
+              placeholder="New York"
+            />
+            {errors.city && <span className="error-message">{errors.city}</span>}
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="postal_code">Postal Code</label>
+            <input
+              id="postal_code"
+              type="text"
+              value={formData.address.postal_code}
+              onChange={(e) => setFormData({
+                ...formData, 
+                address: {...formData.address, postal_code: e.target.value}
+              })}
+              placeholder="10001"
+            />
+          </div>
+        </div>
+        
+        <div className="form-group">
+          <label htmlFor="country">Country *</label>
+          <select
+            id="country"
+            value={formData.address.country}
+            onChange={(e) => setFormData({
+              ...formData, 
+              address: {...formData.address, country: e.target.value}
+            })}
+            className={errors.country ? 'error' : ''}
+          >
+            <option value="">Select Country</option>
+            <option value="US">United States</option>
+            <option value="CA">Canada</option>
+            <option value="GB">United Kingdom</option>
+            <option value="DE">Germany</option>
+            <option value="FR">France</option>
+            {/* Add more countries */}
+          </select>
+          {errors.country && <span className="error-message">{errors.country}</span>}
+        </div>
+      </fieldset>
+      
+      {/* Notes Field */}
+      <div className="form-group">
+        <label htmlFor="notes">Notes</label>
+        <textarea
+          id="notes"
+          value={formData.notes}
+          onChange={(e) => setFormData({...formData, notes: e.target.value})}
+          rows="3"
+          placeholder="Additional information..."
+        />
+      </div>
+      
+      {/* Action Buttons */}
+      <div className="form-actions">
+        <button type="button" onClick={onCancel} className="btn-cancel">
+          Cancel
+        </button>
+        <button type="submit" className="btn-submit" disabled={isGeocoding}>
+          {isGeocoding ? 'Geocoding...' : 'Save Customer'}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+export default CustomerForm;
+```
+
+5.3 CSV Import Processor Implementation
+---------------------------------------
+```javascript
+const csv = require('csv-parser');
+const fs = require('fs');
+const { geocodeAddress, findNearestAirport } = require('./services');
+
+async function processCSVImport(filePath) {
+  const results = [];
+  const errors = [];
+  let lineNumber = 0;
+  
+  return new Promise((resolve, reject) => {
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', (row) => {
+        lineNumber++;
+        
+        // Validate required fields
+        const validation = validateCSVRow(row, lineNumber);
+        if (!validation.valid) {
+          errors.push(validation.error);
+          return;
+        }
+        
+        // Transform to customer object
+        results.push({
+          name: row['Company Name'] || row['Name'],
+          email: row['Email'],
+          phone: row['Phone'],
+          contact_name: row['Contact Person'] || '',
+          address: {
+            street: row['Street Address'] || '',
+            city: row['City'],
+            postal_code: row['Postal Code'] || '',
+            country: row['Country']
+          },
+          notes: row['Notes'] || '',
+          external_id: row['APplus ID'] || null,
+          data_source: row['APplus ID'] ? 'applus_import' : 'csv_upload'
+        });
+      })
+      .on('end', async () => {
+        // Geocode all addresses
+        for (const customer of results) {
+          try {
+            const coords = await geocodeAddress(
+              customer.address.street,
+              customer.address.city,
+              customer.address.country
+            );
+            customer.origin = {
+              ...customer.address,
+              latitude: coords.lat,
+              longitude: coords.lng
+            };
+            
+            const airport = await findNearestAirport(coords.lat, coords.lng);
+            customer.origin.airport_code = airport.code;
+          } catch (error) {
+            errors.push({
+              line: customer.name,
+              error: `Geocoding failed: ${error.message}`
+            });
+          }
+        }
+        
+        resolve({
+          customers: results,
+          total: results.length,
+          errors: errors,
+          success: errors.length === 0
+        });
+      })
+      .on('error', (error) => {
+        reject(error);
+      });
+  });
+}
+
+function validateCSVRow(row, lineNumber) {
+  const required = ['Name', 'Email', 'Phone', 'City', 'Country'];
+  
+  for (const field of required) {
+    if (!row[field] || row[field].trim() === '') {
+      return {
+        valid: false,
+        error: {
+          line: lineNumber,
+          field: field,
+          message: `${field} is required`
+        }
+      };
+    }
+  }
+  
+  // Validate email format
+  if (!row['Email'].match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    return {
+      valid: false,
+      error: {
+        line: lineNumber,
+        field: 'Email',
+        message: 'Invalid email format'
+      }
+    };
+  }
+  
+  return { valid: true };
+}
+
+// CSV Template Generation
+function generateCSVTemplate() {
+  const headers = [
+    'Name',
+    'Contact Person',
+    'Email',
+    'Phone',
+    'Street Address',
+    'City',
+    'Postal Code',
+    'Country',
+    'Notes',
+    'APplus ID'
+  ];
+  
+  const example = [
+    'ABC Corporation',
+    'John Smith',
+    'john@abccorp.com',
+    '+1 234 567 8900',
+    '123 Main Street',
+    'New York',
+    '10001',
+    'US',
+    'Important client',
+    '12345'
+  ];
+  
+  return headers.join(',') + '\n' + example.join(',');
+}
+
+module.exports = {
+  processCSVImport,
+  generateCSVTemplate
+};
+```
+
+5.4 Automated File Import Service (File Watcher)
+-----------------------------------------------
+```javascript
+const chokidar = require('chokidar');
+const path = require('path');
+const fs = require('fs').promises;
+const xml2js = require('xml2js');
+const { processCSVImport } = require('./csv-processor');
+const { createCustomer, updateCustomer, findCustomerByExternalId } = require('./database');
+const { geocodeAddress, findNearestAirport } = require('./services');
+
+// Configuration
+const WATCH_FOLDER = process.env.APPLUS_EXPORT_FOLDER || '/shared/applus_exports';
+const ARCHIVE_FOLDER = path.join(WATCH_FOLDER, 'archive');
+const FILE_PATTERN = /^customers?[_-].*(\.xml|\.csv)$/i;
+
+class FileImportService {
+  constructor() {
+    this.watcher = null;
+    this.isProcessing = false;
+  }
+  
+  // Start watching folder for new files
+  start() {
+    console.log(`Watching folder: ${WATCH_FOLDER}`);
+    
+    // Ensure archive folder exists
+    fs.mkdir(ARCHIVE_FOLDER, { recursive: true });
+    
+    this.watcher = chokidar.watch(WATCH_FOLDER, {
+      ignored: /(^|[\/\\])\../, // ignore dotfiles
+      persistent: true,
+      ignoreInitial: false,
+      awaitWriteFinish: {
+        stabilityThreshold: 2000,
+        pollInterval: 100
+      }
+    });
+    
+    this.watcher
+      .on('add', (filePath) => this.handleNewFile(filePath))
+      .on('error', (error) => console.error(`Watcher error: ${error}`));
+    
+    console.log('File import service started');
+  }
+  
+  // Stop watching
+  stop() {
+    if (this.watcher) {
+      this.watcher.close();
+      console.log('File import service stopped');
+    }
+  }
+  
+  // Handle new file detection
+  async handleNewFile(filePath) {
+    const fileName = path.basename(filePath);
+    
+    // Check if file matches pattern
+    if (!FILE_PATTERN.test(fileName)) {
+      console.log(`Skipping file (doesn't match pattern): ${fileName}`);
+      return;
+    }
+    
+    // Prevent concurrent processing
+    if (this.isProcessing) {
+      console.log(`Already processing a file, queuing: ${fileName}`);
+      setTimeout(() => this.handleNewFile(filePath), 5000);
+      return;
+    }
+    
+    this.isProcessing = true;
+    
+    try {
+      console.log(`Processing new file: ${fileName}`);
+      
+      // Determine file type
+      const ext = path.extname(filePath).toLowerCase();
+      let result;
+      
+      if (ext === '.xml') {
+        result = await this.processXMLFile(filePath);
+      } else if (ext === '.csv') {
+        result = await processCSVImport(filePath);
+      }
+      
+      // Import customers to database
+      const importResult = await this.importCustomers(result.customers);
+      
+      // Archive the processed file
+      await this.archiveFile(filePath);
+      
+      // Generate import report
+      await this.generateImportReport(fileName, importResult, result.errors);
+      
+      console.log(`Successfully processed: ${fileName}`);
+      console.log(`Imported: ${importResult.imported}, Updated: ${importResult.updated}, Errors: ${importResult.errors.length}`);
+      
+    } catch (error) {
+      console.error(`Error processing ${fileName}:`, error);
+      await this.handleImportError(filePath, error);
+    } finally {
+      this.isProcessing = false;
+    }
+  }
+  
+  // Process XML file (APplus format)
+  async processXMLFile(filePath) {
+    const xmlContent = await fs.readFile(filePath, 'utf8');
+    const parser = new xml2js.Parser({ explicitArray: false });
+    const result = await parser.parseStringPromise(xmlContent);
+    
+    // Extract customer data (adjust based on APplus XML structure)
+    const customers = this.extractCustomersFromXML(result);
+    
+    return {
+      customers: customers,
+      total: customers.length,
+      errors: []
+    };
+  }
+  
+  // Extract and transform customer data from XML
+  extractCustomersFromXML(xmlData) {
+    // This structure may vary based on APplus export format
+    // Adjust according to actual XML schema
+    const customers = [];
+    const customerNodes = xmlData.Customers?.Customer || [];
+    const customerArray = Array.isArray(customerNodes) ? customerNodes : [customerNodes];
+    
+    for (const node of customerArray) {
+      try {
+        customers.push({
+          name: node.CompanyName || node.Name,
+          email: node.Email,
+          phone: node.Phone || node.Mobile,
+          contact_name: node.ContactPerson || '',
+          address: {
+            street: node.Address?.Street || '',
+            city: node.Address?.City,
+            postal_code: node.Address?.PostalCode || '',
+            country: node.Address?.Country
+          },
+          external_id: node.CustomerID,
+          data_source: 'applus_import',
+          metadata: {
+            applus_customer_type: node.CustomerType,
+            applus_status: node.Status,
+            applus_last_modified: node.LastModified
+          }
+        });
+      } catch (error) {
+        console.error('Error parsing customer node:', error);
+      }
+    }
+    
+    return customers;
+  }
+  
+  // Import customers to database
+  async importCustomers(customers) {
+    const result = {
+      imported: 0,
+      updated: 0,
+      skipped: 0,
+      errors: []
+    };
+    
+    for (const customerData of customers) {
+      try {
+        // Check if customer exists (by external_id or email)
+        let existingCustomer = null;
+        
+        if (customerData.external_id) {
+          existingCustomer = await findCustomerByExternalId(customerData.external_id);
+        }
+        
+        if (!existingCustomer && customerData.email) {
+          existingCustomer = await findCustomerByEmail(customerData.email);
+        }
+        
+        // Geocode address
+        let coordinates = null;
+        let airportCode = null;
+        
+        try {
+          coordinates = await geocodeAddress(
+            customerData.address.street,
+            customerData.address.city,
+            customerData.address.country
+          );
+          
+          const airport = await findNearestAirport(
+            coordinates.lat,
+            coordinates.lng
+          );
+          airportCode = airport.code;
+        } catch (geoError) {
+          console.warn(`Geocoding failed for ${customerData.name}:`, geoError.message);
+          // Continue without coordinates
+        }
+        
+        // Prepare customer object
+        const customer = {
+          ...customerData,
+          origin: {
+            ...customerData.address,
+            latitude: coordinates?.lat || null,
+            longitude: coordinates?.lng || null,
+            airport_code: airportCode
+          },
+          cost_share_percentage: 0,
+          is_active: true,
+          last_synced_at: new Date()
+        };
+        
+        if (existingCustomer) {
+          // Update existing customer
+          await updateCustomer(existingCustomer.id, customer);
+          result.updated++;
+        } else {
+          // Create new customer
+          await createCustomer(customer);
+          result.imported++;
+        }
+        
+      } catch (error) {
+        result.errors.push({
+          customer: customerData.name,
+          error: error.message
+        });
+      }
+    }
+    
+    return result;
+  }
+  
+  // Archive processed file
+  async archiveFile(filePath) {
+    const fileName = path.basename(filePath);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const archivePath = path.join(
+      ARCHIVE_FOLDER,
+      `${timestamp}_${fileName}`
+    );
+    
+    await fs.rename(filePath, archivePath);
+    console.log(`Archived: ${fileName} → ${path.basename(archivePath)}`);
+  }
+  
+  // Generate import report
+  async generateImportReport(fileName, importResult, parseErrors) {
+    const report = {
+      file_name: fileName,
+      import_date: new Date().toISOString(),
+      statistics: {
+        imported: importResult.imported,
+        updated: importResult.updated,
+        skipped: importResult.skipped,
+        total_errors: importResult.errors.length + parseErrors.length
+      },
+      import_errors: importResult.errors,
+      parse_errors: parseErrors
+    };
+    
+    // Save report to database
+    await saveImportReport(report);
+    
+    // Send email notification if configured
+    if (process.env.SEND_IMPORT_NOTIFICATIONS === 'true') {
+      await sendImportNotification(report);
+    }
+    
+    return report;
+  }
+  
+  // Handle import errors
+  async handleImportError(filePath, error) {
+    const errorFolder = path.join(WATCH_FOLDER, 'errors');
+    await fs.mkdir(errorFolder, { recursive: true });
+    
+    const fileName = path.basename(filePath);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const errorPath = path.join(errorFolder, `${timestamp}_ERROR_${fileName}`);
+    
+    // Move file to error folder
+    await fs.rename(filePath, errorPath);
+    
+    // Save error log
+    const errorLog = {
+      file: fileName,
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    };
+    
+    await fs.writeFile(
+      errorPath + '.error.json',
+      JSON.stringify(errorLog, null, 2)
+    );
+    
+    // Send alert
+    await sendErrorAlert(errorLog);
+  }
+}
+
+// Start the service
+const importService = new FileImportService();
+importService.start();
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  importService.stop();
+  process.exit(0);
+});
+
+module.exports = FileImportService;
+```
+
+5.5 Database Schema for Customer Management
+-------------------------------------------
+```sql
+-- Customers table
+CREATE TABLE customers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  external_id VARCHAR(100) UNIQUE, -- APplus customer ID
+  name VARCHAR(255) NOT NULL,
+  contact_name VARCHAR(255),
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(50) NOT NULL,
+  mobile VARCHAR(50),
+  
+  -- Address information
+  street_address TEXT,
+  city VARCHAR(100) NOT NULL,
+  postal_code VARCHAR(20),
+  country VARCHAR(2) NOT NULL, -- ISO country code
+  
+  -- Geocoded location
+  latitude DECIMAL(10, 8),
+  longitude DECIMAL(11, 8),
+  nearest_airport_code VARCHAR(3),
+  
+  -- Travel planner specific
+  cost_share_percentage DECIMAL(5, 2) DEFAULT 0 CHECK (cost_share_percentage >= 0 AND cost_share_percentage <= 100),
+  preferences JSONB DEFAULT '{}',
+  
+  -- Source tracking
+  data_source VARCHAR(20) NOT NULL CHECK (data_source IN ('applus_import', 'manual_entry', 'csv_upload')),
+  can_edit_synced_fields BOOLEAN DEFAULT true,
+  
+  -- Metadata
+  notes TEXT,
+  metadata JSONB DEFAULT '{}',
+  
+  -- Status
+  is_active BOOLEAN DEFAULT true,
+  
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_synced_at TIMESTAMP,
+  
+  -- Indexes
+  UNIQUE(email)
+);
+
+-- Import history table
+CREATE TABLE import_history (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  file_name VARCHAR(255) NOT NULL,
+  import_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  imported_count INTEGER DEFAULT 0,
+  updated_count INTEGER DEFAULT 0,
+  skipped_count INTEGER DEFAULT 0,
+  error_count INTEGER DEFAULT 0,
+  errors JSONB DEFAULT '[]',
+  parse_errors JSONB DEFAULT '[]',
+  status VARCHAR(20) CHECK (status IN ('success', 'partial', 'failed')),
+  duration_ms INTEGER
+);
+
+-- Indexes for performance
+CREATE INDEX idx_customers_email ON customers(email);
+CREATE INDEX idx_customers_external_id ON customers(external_id);
+CREATE INDEX idx_customers_data_source ON customers(data_source);
+CREATE INDEX idx_customers_is_active ON customers(is_active);
+CREATE INDEX idx_customers_location ON customers(latitude, longitude);
+CREATE INDEX idx_import_history_date ON import_history(import_date DESC);
+
+-- Trigger to update updated_at
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = CURRENT_TIMESTAMP;
+  RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_customers_updated_at BEFORE UPDATE ON customers
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+```
+
+===============================================================================
+6. SECURITY CONSIDERATIONS
+===============================================================================
+
+6.1 Authentication & Authorization
+----------------------------------
+- Use API keys for APplus web service access
+- Implement OAuth 2.0 for travel planner API
+- Store APplus credentials in secure vault (e.g., AWS Secrets Manager)
+- Use environment variables, never hardcode credentials
+- Implement IP whitelisting if possible
+- Use HTTPS/TLS for all communications
+
+6.2 Data Protection
+------------------
+- Encrypt customer data at rest in travel planner database
+- Encrypt data in transit (SSL/TLS)
+- Implement role-based access control (RBAC)
+- Log all data access and modifications
+- Comply with GDPR/data protection regulations
+- Regular security audits
+
+6.3 Error Handling & Monitoring
+-------------------------------
+- Implement retry logic with exponential backoff
+- Set up alerts for sync failures
+- Monitor API rate limits
+- Log all errors with context
+- Create dashboard for sync status
+- Regular backup of customer data
+
+===============================================================================
+7. SETUP GUIDE FOR APPLUS EXPORT (For IT Team)
+===============================================================================
+
+This section provides guidance for your IT team to configure APplus to export
+customer data for the travel planner system.
+
+7.1 Configuring APplus Export
+-----------------------------
+Step 1: Identify Export Module
+- Open APplus ERP system
+- Navigate to Customer Management / CRM module
+- Look for "Export" or "Data Export" functionality
+
+Step 2: Create Export Template
+Required Fields to Export:
+- Customer ID (Kundennummer)
+- Company Name (Firmenname)
+- Contact Person (Ansprechpartner)
+- Email Address
+- Phone Number
+- Mobile Number (optional)
+- Street Address
+- City
+- Postal Code
+- Country
+- Customer Status
+- Last Modified Date
+
+Step 3: Choose Export Format
+Recommended: XML (if available) or CSV
+
+For XML:
+- Use OpenTrans format if supported
+- Save as: customers_export_YYYY-MM-DD.xml
+
+For CSV:
+- Use UTF-8 encoding
+- Comma delimiter
+- Include headers
+- Save as: customers_export_YYYY-MM-DD.csv
+
+Step 4: Set Up Automated Export
+Option A: APplus Scheduled Task
+- Configure APplus to auto-export daily
+- Schedule time: 2:00 AM (off-peak)
+- Destination: Shared network folder
+
+Option B: Database Export Script
+If APplus doesn't support scheduled exports:
+```sql
+-- Example SQL export (adjust for your database)
+SELECT 
+  customer_id,
+  company_name,
+  contact_person,
+  email,
+  phone,
+  mobile,
+  street_address,
+  city,
+  postal_code,
+  country,
+  status,
+  last_modified
+FROM customers
+WHERE last_modified > DATEADD(day, -1, GETDATE())
+ORDER BY last_modified DESC;
+```
+
+Save this as a scheduled database job to export to CSV.
+
+Step 5: Configure File Destination
+Set up shared location accessible by both systems:
+- Network Drive: \\server\shared\applus_exports\
+- FTP Server: ftp://server/applus_exports/
+- Cloud Storage: AWS S3, Azure Blob, Google Cloud Storage
+
+Permissions:
+- APplus: Write access
+- Travel Planner: Read access
+
+7.2 Testing the Export
+----------------------
+1. Run manual export from APplus
+2. Verify file is created in correct location
+3. Check file contains all required fields
+4. Verify data format is correct
+5. Test with travel planner import
+
+7.3 Monitoring and Maintenance
+------------------------------
+- Set up alerts if export fails
+- Monitor disk space in export folder
+- Archive old exports monthly
+- Review import logs weekly
+- Update export template if fields change
+
+===============================================================================
+8. TESTING STRATEGY
+===============================================================================
+
+8.1 Unit Tests
+-------------
+- XML parser functions
+- Data transformation functions
+- Customer create/update logic
+- Geocoding functions
+- Airport lookup functions
+
+8.2 Integration Tests
+--------------------
+- APplus connection test
+- Full sync process
+- Error handling scenarios
+- Duplicate detection
+- Update vs. create logic
+
+8.3 User Acceptance Testing
+---------------------------
+- Verify customer data accuracy
+- Check all fields are mapped correctly
+- Test sync frequency
+- Validate geocoding results
+- Confirm airport assignments
+
+===============================================================================
+9. NEXT STEPS & ACTION PLAN
+===============================================================================
+
+Phase 1: Manual Entry System (Week 1-2) - PRIORITY
+--------------------------------------------------
+Goal: Get basic functionality working immediately without APplus dependency
+
+Tasks:
+1. Set up database schema for customers
+2. Build manual customer entry form (web interface)
+3. Implement form validation and duplicate detection
+4. Add geocoding for addresses (Google Maps API)
+5. Implement airport lookup functionality
+6. Create customer list/search interface
+7. Test manual entry workflow
+
+Deliverables:
+- Working customer management interface
+- Ability to add/edit/delete customers manually
+- Basic customer list and search
+
+Resources Needed:
+- Frontend developer (React/Vue)
+- Backend developer (Node.js/Python)
+- Google Maps API key
+
+Phase 2: CSV Upload Feature (Week 3)
+------------------------------------
+Goal: Allow bulk import via CSV upload
+
+Tasks:
+1. Create CSV template generator
+2. Build CSV upload interface
+3. Implement CSV parser with validation
+4. Add import preview functionality
+5. Create batch import processor
+6. Generate import reports
+7. Test with sample data
+
+Deliverables:
+- CSV template download
+- CSV upload interface with validation
+- Import preview and confirmation
+- Import history tracking
+
+Phase 3: APplus Export Setup (Week 3-4)
+---------------------------------------
+Goal: Automate customer sync from APplus
+
+Tasks:
+1. Meet with IT/APplus administrator
+2. Configure APplus export (XML or CSV)
+3. Set up shared folder/FTP location
+4. Test export with sample data
+5. Verify export file format
+6. Set up scheduled export (if possible)
+7. Document export process
+
+Deliverables:
+- APplus export configured
+- Export schedule established
+- Export format documented
+
+Phase 4: Automated Import Service (Week 4-5)
+-------------------------------------------
+Goal: Automatically process APplus exports
+
+Tasks:
+1. Build file watcher service
+2. Implement XML/CSV parser for APplus format
+3. Add duplicate detection logic
+4. Implement geocoding for imported customers
+5. Add error handling and logging
+6. Set up import notifications
+7. Create import monitoring dashboard
+
+Deliverables:
+- File watcher service running
+- Automatic import processing
+- Import reports and notifications
+- Monitoring dashboard
+
+Phase 5: Integration Testing (Week 6)
+------------------------------------
+Goal: End-to-end testing of complete system
+
+Tasks:
+1. Test manual entry workflow
+2. Test CSV bulk upload
+3. Test APplus export and import
+4. Test geocoding accuracy
+5. Test duplicate detection
+6. Load testing with large datasets
+7. User acceptance testing
+
+Deliverables:
+- Tested and stable system
+- User documentation
+- Import/export procedures documented
+
+IMMEDIATE ACTIONS (This Week):
+-----------------------------
+1. ☐ Set up development environment
+2. ☐ Choose tech stack (confirm framework choice)
+3. ☐ Set up database (PostgreSQL recommended)
+4. ☐ Get Google Maps API key for geocoding
+5. ☐ Design customer entry form UI
+6. ☐ Start building customer database schema
+7. ☐ Begin frontend development (manual entry form)
+
+WEEK 1 MILESTONES:
+-----------------
+- Database schema created
+- Manual entry form prototype ready
+- Basic validation working
+- First test customer added manually
+
+DEPENDENCIES & BLOCKERS:
+-----------------------
+- Google Maps API key (needed for geocoding)
+- Decision on frontend framework (React/Vue/Svelte)
+- Database server access (PostgreSQL/MySQL)
+- APplus IT administrator availability (for Phase 3)
+
+SUCCESS CRITERIA:
+----------------
+Phase 1 Success:
+✓ User can manually add customers through web form
+✓ Customer data is validated and saved
+✓ Addresses are geocoded automatically
+✓ Nearest airports are identified
+
+Phase 2 Success:
+✓ User can upload CSV with multiple customers
+✓ Import preview shows data before committing
+✓ Errors are clearly identified
+✓ Import history is tracked
+
+Phase 3-4 Success:
+✓ APplus exports run on schedule
+✓ Files are automatically detected and processed
+✓ Import runs without manual intervention
+✓ Errors are logged and notifications sent
+
+===============================================================================
+10. ESTIMATED EFFORT & RESOURCES
+===============================================================================
+
+Development Time Breakdown:
+
+Phase 1: Manual Entry System (Priority)
+- Customer database schema: 1-2 days
+- Manual entry form (frontend): 3-4 days
+- API endpoints for CRUD: 2-3 days
+- Geocoding integration: 1-2 days
+- Airport lookup: 1 day
+- Testing: 2-3 days
+Subtotal: 10-15 days (2-3 weeks)
+
+Phase 2: CSV Upload Feature
+- CSV template generator: 1 day
+- CSV parser: 2-3 days
+- Upload interface: 2 days
+- Import preview: 1-2 days
+- Testing: 2 days
+Subtotal: 8-10 days (1.5-2 weeks)
+
+Phase 3: APplus Export Setup
+- IT coordination: 1-2 days
+- Export configuration: 1-2 days
+- Testing: 1-2 days
+Subtotal: 3-6 days (varies on IT availability)
+
+Phase 4: Automated Import
+- File watcher service: 2-3 days
+- XML/CSV processor: 3-4 days
+- Import logic: 2-3 days
+- Error handling: 2 days
+- Monitoring dashboard: 2-3 days
+- Testing: 3-4 days
+Subtotal: 14-19 days (3-4 weeks)
+
+Total Development Time: 35-50 days (7-10 weeks)
+
+**Can be parallelized across team members**
+
+Team Resources:
+--------------
+Required:
+- 1 Frontend Developer (React/Vue expertise)
+- 1 Backend Developer (Node.js/Python + SQL)
+- 0.5 UI/UX Designer (for form design)
+- 0.25 DevOps (for deployment)
+- APplus Administrator (IT team, part-time)
+
+Optional:
+- QA Tester (can be part of development team)
+- Technical Writer (for documentation)
+
+External Services & Costs:
+--------------------------
+Essential:
+- Google Maps Geocoding API
+  * Free tier: $200 credit/month (good for ~40,000 geocodes)
+  * Paid: $5 per 1,000 requests after free tier
+  * Estimate: $10-50/month depending on volume
+
+- Database Hosting (PostgreSQL)
+  * Development: Free (local)
+  * Production: $20-50/month (AWS RDS, DigitalOcean, etc.)
+
+- Application Hosting
+  * Frontend: $0 (Vercel/Netlify free tier)
+  * Backend: $5-20/month (DigitalOcean, Railway, Render)
+
+- Airport Database
+  * OpenFlights: Free
+  * Alternative: Airport DB API $0-50/month
+
+Optional:
+- Error Monitoring (Sentry): $0-26/month
+- Email Service (for notifications): $0-10/month
+- File Storage (if using cloud): $5-20/month
+
+Monthly Operating Cost: $40-180/month
+
+One-time Costs:
+- Development: Based on team salaries
+- Initial setup: Minimal ($0 if using existing infrastructure)
+
+Cost Savings vs. Full BIF Integration:
+- No vendor licensing fees
+- No ongoing support contracts
+- Lower complexity = lower maintenance
+- Can start immediately without vendor approval
+
+Return on Investment:
+--------------------
+Time Saved:
+- Manual customer lookup: 2-3 min → 10 seconds (95% reduction)
+- Bulk imports: Hours → Minutes
+- Data accuracy: Reduces errors by ~90%
+- Trip planning: Faster by 50-70%
+
+Estimated ROI: 6-12 months based on time savings
+
+===============================================================================
+11. TROUBLESHOOTING GUIDE
+===============================================================================
+
+Common Issues and Solutions:
+
+Issue 1: Geocoding Fails
+------------------------
+Symptoms: Address cannot be converted to coordinates
+Causes:
+- Invalid/incomplete address
+- API key issues
+- Rate limit exceeded
+
+Solutions:
+- Validate address format before geocoding
+- Implement retry logic with exponential backoff
+- Cache geocoding results
+- Fall back to manual coordinate entry
+- Use alternative geocoding service
+
+Issue 2: Duplicate Customers Detected
+-------------------------------------
+Symptoms: Same customer appears multiple times
+Causes:
+- Slight variations in name/email
+- APplus ID changed
+- Manual entry after import
+
+Solutions:
+- Implement fuzzy matching for names
+- Use email as primary unique identifier
+- Show merge suggestion to user
+- Add "mark as duplicate" feature
+- Maintain external_id mapping
+
+Issue 3: File Import Fails
+--------------------------
+Symptoms: XML/CSV file not processed
+Causes:
+- File format incorrect
+- Permissions issues
+- File locked/in use
+- Network connectivity
+
+Solutions:
+- Validate file format before processing
+- Implement file lock detection
+- Add retry mechanism
+- Log detailed error messages
+- Move failed files to error folder
+
+Issue 4: Airport Not Found
+--------------------------
+Symptoms: Cannot determine nearest airport
+Causes:
+- Location too remote
+- Airport database outdated
+- Coordinates invalid
+
+Solutions:
+- Increase search radius
+- Use backup airport (major hub)
+- Allow manual airport selection
+- Update airport database regularly
+
+Issue 5: CSV Import Errors
+--------------------------
+Symptoms: CSV import shows validation errors
+Causes:
+- Missing required fields
+- Invalid email format
+- Incorrect date format
+- Encoding issues
+
+Solutions:
+- Provide clear CSV template
+- Show validation errors before import
+- Allow user to fix errors inline
+- Support multiple CSV formats
+- Auto-detect encoding
+
+===============================================================================
+END OF APPLUS INTEGRATION DOCUMENT
+===============================================================================
+
+QUICK START SUMMARY:
+-------------------
+1. BUILD MANUAL ENTRY FIRST (Week 1-2)
+   - Get immediate functionality without APplus dependency
+   - Users can start using the system right away
+   
+2. ADD CSV UPLOAD (Week 3)
+   - Enable bulk imports
+   - Reduce manual data entry effort
+   
+3. SET UP APPLUS EXPORT (Week 3-4)
+   - Work with IT to configure exports
+   - Test with sample data
+   
+4. IMPLEMENT AUTOMATED IMPORT (Week 4-5)
+   - File watcher service
+   - Automatic processing
+   - Error handling and monitoring
+
+This phased approach ensures you have a working system from day one, while
+gradually adding automation and APplus integration as resources permit.
+
+KEY BENEFITS OF THIS APPROACH:
+- ✓ No vendor support required
+- ✓ Start using immediately  
+- ✓ Flexible and maintainable
+- ✓ Lower complexity and cost
+- ✓ Full control over data flow
+- ✓ Easy to troubleshoot
+- ✓ Works with any APplus version
+
+The hybrid manual + automated approach provides the best balance between
+immediate usability and long-term efficiency.
+
+For questions or support during implementation, refer to the relevant sections
+in this document or consult with your development team.
+
+Last Updated: December 2024
+Version: 2.0 (Hybrid Approach)

@@ -1,0 +1,1787 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<travel_rates>
+  <metadata>
+    <source>German Federal Ministry of Finance (Bundesministerium der Finanzen)</source>
+    <document>Tax Treatment of Travel Costs for Business Travel Abroad from January 1, 2025</document>
+    <effective_date>2025-01-01</effective_date>
+    <reference>BMF Letter dated December 2, 2024</reference>
+    <currency>EUR</currency>
+  </metadata>
+  
+  <notes>
+    <note>Daily allowance (24h) = Full day allowance for trips 24+ hours</note>
+    <note>Daily allowance (8h) = Partial day allowance for arrival/departure day or trips 8-24 hours</note>
+    <note>Hotel allowance = Maximum overnight accommodation allowance per night</note>
+    <note>Meal deductions: Breakfast 20%, Lunch 40%, Dinner 40% of daily allowance</note>
+    <note>For countries not listed, use Luxembourg rates</note>
+  </notes>
+  
+  <countries>
+    <!-- A -->
+    <country>
+      <name>Afghanistan</name>
+      <country_code>AFG</country_code>
+      <daily_allowance_24h>30</daily_allowance_24h>
+      <daily_allowance_8h>20</daily_allowance_8h>
+      <hotel_allowance>95</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Albania</name>
+      <country_code>ALB</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>112</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Algeria</name>
+      <country_code>DZA</country_code>
+      <daily_allowance_24h>47</daily_allowance_24h>
+      <daily_allowance_8h>32</daily_allowance_8h>
+      <hotel_allowance>120</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Andorra</name>
+      <country_code>AND</country_code>
+      <daily_allowance_24h>41</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>91</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Angola</name>
+      <country_code>AGO</country_code>
+      <daily_allowance_24h>40</daily_allowance_24h>
+      <daily_allowance_8h>27</daily_allowance_8h>
+      <hotel_allowance>368</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Argentina</name>
+      <country_code>ARG</country_code>
+      <daily_allowance_24h>35</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>113</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Armenia</name>
+      <country_code>ARM</country_code>
+      <daily_allowance_24h>29</daily_allowance_24h>
+      <daily_allowance_8h>20</daily_allowance_8h>
+      <hotel_allowance>107</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Australia</name>
+      <country_code>AUS</country_code>
+      <daily_allowance_24h>57</daily_allowance_24h>
+      <daily_allowance_8h>38</daily_allowance_8h>
+      <hotel_allowance>173</hotel_allowance>
+      <cities>
+        <city>
+          <name>Canberra</name>
+          <daily_allowance_24h>74</daily_allowance_24h>
+          <daily_allowance_8h>49</daily_allowance_8h>
+          <hotel_allowance>186</hotel_allowance>
+        </city>
+        <city>
+          <name>Sydney</name>
+          <daily_allowance_24h>57</daily_allowance_24h>
+          <daily_allowance_8h>38</daily_allowance_8h>
+          <hotel_allowance>173</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Austria</name>
+      <country_code>AUT</country_code>
+      <daily_allowance_24h>50</daily_allowance_24h>
+      <daily_allowance_8h>33</daily_allowance_8h>
+      <hotel_allowance>117</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Azerbaijan</name>
+      <country_code>AZE</country_code>
+      <daily_allowance_24h>44</daily_allowance_24h>
+      <daily_allowance_8h>29</daily_allowance_8h>
+      <hotel_allowance>88</hotel_allowance>
+    </country>
+    
+    <!-- B -->
+    <country>
+      <name>Bahrain</name>
+      <country_code>BHR</country_code>
+      <daily_allowance_24h>48</daily_allowance_24h>
+      <daily_allowance_8h>32</daily_allowance_8h>
+      <hotel_allowance>153</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Bangladesh</name>
+      <country_code>BGD</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>189</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Barbados</name>
+      <country_code>BRB</country_code>
+      <daily_allowance_24h>54</daily_allowance_24h>
+      <daily_allowance_8h>36</daily_allowance_8h>
+      <hotel_allowance>206</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Belarus</name>
+      <country_code>BLR</country_code>
+      <daily_allowance_24h>20</daily_allowance_24h>
+      <daily_allowance_8h>13</daily_allowance_8h>
+      <hotel_allowance>98</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Belgium</name>
+      <country_code>BEL</country_code>
+      <daily_allowance_24h>59</daily_allowance_24h>
+      <daily_allowance_8h>40</daily_allowance_8h>
+      <hotel_allowance>141</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Benin</name>
+      <country_code>BEN</country_code>
+      <daily_allowance_24h>40</daily_allowance_24h>
+      <daily_allowance_8h>27</daily_allowance_8h>
+      <hotel_allowance>168</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Bhutan</name>
+      <country_code>BTN</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>176</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Bolivia</name>
+      <country_code>BOL</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>108</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Bosnia and Herzegovina</name>
+      <country_code>BIH</country_code>
+      <daily_allowance_24h>23</daily_allowance_24h>
+      <daily_allowance_8h>16</daily_allowance_8h>
+      <hotel_allowance>75</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Botswana</name>
+      <country_code>BWA</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>176</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Brazil</name>
+      <country_code>BRA</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>88</hotel_allowance>
+      <cities>
+        <city>
+          <name>Brasilia</name>
+          <daily_allowance_24h>51</daily_allowance_24h>
+          <daily_allowance_8h>34</daily_allowance_8h>
+          <hotel_allowance>88</hotel_allowance>
+        </city>
+        <city>
+          <name>Rio de Janeiro</name>
+          <daily_allowance_24h>69</daily_allowance_24h>
+          <daily_allowance_8h>46</daily_allowance_8h>
+          <hotel_allowance>140</hotel_allowance>
+        </city>
+        <city>
+          <name>Sao Paulo</name>
+          <daily_allowance_24h>46</daily_allowance_24h>
+          <daily_allowance_8h>31</daily_allowance_8h>
+          <hotel_allowance>151</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Brunei</name>
+      <country_code>BRN</country_code>
+      <daily_allowance_24h>45</daily_allowance_24h>
+      <daily_allowance_8h>30</daily_allowance_8h>
+      <hotel_allowance>110</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Bulgaria</name>
+      <country_code>BGR</country_code>
+      <daily_allowance_24h>22</daily_allowance_24h>
+      <daily_allowance_8h>15</daily_allowance_8h>
+      <hotel_allowance>115</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Burkina Faso</name>
+      <country_code>BFA</country_code>
+      <daily_allowance_24h>38</daily_allowance_24h>
+      <daily_allowance_8h>25</daily_allowance_8h>
+      <hotel_allowance>174</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Burundi</name>
+      <country_code>BDI</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>138</hotel_allowance>
+    </country>
+    
+    <!-- C -->
+    <country>
+      <name>Cambodia</name>
+      <country_code>KHM</country_code>
+      <daily_allowance_24h>42</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>108</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Cameroon</name>
+      <country_code>CMR</country_code>
+      <daily_allowance_24h>56</daily_allowance_24h>
+      <daily_allowance_8h>37</daily_allowance_8h>
+      <hotel_allowance>275</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Canada</name>
+      <country_code>CAN</country_code>
+      <daily_allowance_24h>54</daily_allowance_24h>
+      <daily_allowance_8h>36</daily_allowance_8h>
+      <hotel_allowance>214</hotel_allowance>
+      <cities>
+        <city>
+          <name>Ottawa</name>
+          <daily_allowance_24h>62</daily_allowance_24h>
+          <daily_allowance_8h>41</daily_allowance_8h>
+          <hotel_allowance>214</hotel_allowance>
+        </city>
+        <city>
+          <name>Toronto</name>
+          <daily_allowance_24h>54</daily_allowance_24h>
+          <daily_allowance_8h>36</daily_allowance_8h>
+          <hotel_allowance>392</hotel_allowance>
+        </city>
+        <city>
+          <name>Vancouver</name>
+          <daily_allowance_24h>63</daily_allowance_24h>
+          <daily_allowance_8h>42</daily_allowance_8h>
+          <hotel_allowance>304</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Cape Verde</name>
+      <country_code>CPV</country_code>
+      <daily_allowance_24h>38</daily_allowance_24h>
+      <daily_allowance_8h>25</daily_allowance_8h>
+      <hotel_allowance>90</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Central African Republic</name>
+      <country_code>CAF</country_code>
+      <daily_allowance_24h>53</daily_allowance_24h>
+      <daily_allowance_8h>36</daily_allowance_8h>
+      <hotel_allowance>210</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Chad</name>
+      <country_code>TCD</country_code>
+      <daily_allowance_24h>42</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>155</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Chile</name>
+      <country_code>CHL</country_code>
+      <daily_allowance_24h>44</daily_allowance_24h>
+      <daily_allowance_8h>29</daily_allowance_8h>
+      <hotel_allowance>154</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>China</name>
+      <country_code>CHN</country_code>
+      <daily_allowance_24h>48</daily_allowance_24h>
+      <daily_allowance_8h>32</daily_allowance_8h>
+      <hotel_allowance>112</hotel_allowance>
+      <cities>
+        <city>
+          <name>Beijing</name>
+          <daily_allowance_24h>30</daily_allowance_24h>
+          <daily_allowance_8h>20</daily_allowance_8h>
+          <hotel_allowance>185</hotel_allowance>
+        </city>
+        <city>
+          <name>Chengdu</name>
+          <daily_allowance_24h>41</daily_allowance_24h>
+          <daily_allowance_8h>28</daily_allowance_8h>
+          <hotel_allowance>131</hotel_allowance>
+        </city>
+        <city>
+          <name>Guangzhou</name>
+          <daily_allowance_24h>36</daily_allowance_24h>
+          <daily_allowance_8h>24</daily_allowance_8h>
+          <hotel_allowance>150</hotel_allowance>
+        </city>
+        <city>
+          <name>Hong Kong</name>
+          <daily_allowance_24h>71</daily_allowance_24h>
+          <daily_allowance_8h>48</daily_allowance_8h>
+          <hotel_allowance>169</hotel_allowance>
+        </city>
+        <city>
+          <name>Shanghai</name>
+          <daily_allowance_24h>58</daily_allowance_24h>
+          <daily_allowance_8h>39</daily_allowance_8h>
+          <hotel_allowance>217</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Colombia</name>
+      <country_code>COL</country_code>
+      <daily_allowance_24h>34</daily_allowance_24h>
+      <daily_allowance_8h>23</daily_allowance_8h>
+      <hotel_allowance>123</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Congo, Democratic Republic</name>
+      <country_code>COD</country_code>
+      <daily_allowance_24h>65</daily_allowance_24h>
+      <daily_allowance_8h>44</daily_allowance_8h>
+      <hotel_allowance>337</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Congo, Republic</name>
+      <country_code>COG</country_code>
+      <daily_allowance_24h>62</daily_allowance_24h>
+      <daily_allowance_8h>41</daily_allowance_8h>
+      <hotel_allowance>215</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Costa Rica</name>
+      <country_code>CRI</country_code>
+      <daily_allowance_24h>60</daily_allowance_24h>
+      <daily_allowance_8h>40</daily_allowance_8h>
+      <hotel_allowance>127</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Côte d'Ivoire</name>
+      <country_code>CIV</country_code>
+      <daily_allowance_24h>59</daily_allowance_24h>
+      <daily_allowance_8h>40</daily_allowance_8h>
+      <hotel_allowance>166</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Croatia</name>
+      <country_code>HRV</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>191</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Cuba</name>
+      <country_code>CUB</country_code>
+      <daily_allowance_24h>51</daily_allowance_24h>
+      <daily_allowance_8h>34</daily_allowance_8h>
+      <hotel_allowance>170</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Cyprus</name>
+      <country_code>CYP</country_code>
+      <daily_allowance_24h>42</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>125</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Czech Republic</name>
+      <country_code>CZE</country_code>
+      <daily_allowance_24h>32</daily_allowance_24h>
+      <daily_allowance_8h>21</daily_allowance_8h>
+      <hotel_allowance>77</hotel_allowance>
+    </country>
+    
+    <!-- D -->
+    <country>
+      <name>Denmark</name>
+      <country_code>DNK</country_code>
+      <daily_allowance_24h>75</daily_allowance_24h>
+      <daily_allowance_8h>50</daily_allowance_8h>
+      <hotel_allowance>183</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Djibouti</name>
+      <country_code>DJI</country_code>
+      <daily_allowance_24h>77</daily_allowance_24h>
+      <daily_allowance_8h>52</daily_allowance_8h>
+      <hotel_allowance>255</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Dominican Republic</name>
+      <country_code>DOM</country_code>
+      <daily_allowance_24h>50</daily_allowance_24h>
+      <daily_allowance_8h>33</daily_allowance_8h>
+      <hotel_allowance>167</hotel_allowance>
+    </country>
+    
+    <!-- E -->
+    <country>
+      <name>Ecuador</name>
+      <country_code>ECU</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>103</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Egypt</name>
+      <country_code>EGY</country_code>
+      <daily_allowance_24h>50</daily_allowance_24h>
+      <daily_allowance_8h>33</daily_allowance_8h>
+      <hotel_allowance>112</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>El Salvador</name>
+      <country_code>SLV</country_code>
+      <daily_allowance_24h>65</daily_allowance_24h>
+      <daily_allowance_8h>44</daily_allowance_8h>
+      <hotel_allowance>161</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Equatorial Guinea</name>
+      <country_code>GNQ</country_code>
+      <daily_allowance_24h>42</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>166</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Eritrea</name>
+      <country_code>ERI</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>78</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Estonia</name>
+      <country_code>EST</country_code>
+      <daily_allowance_24h>29</daily_allowance_24h>
+      <daily_allowance_8h>20</daily_allowance_8h>
+      <hotel_allowance>85</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Ethiopia</name>
+      <country_code>ETH</country_code>
+      <daily_allowance_24h>44</daily_allowance_24h>
+      <daily_allowance_8h>29</daily_allowance_8h>
+      <hotel_allowance>159</hotel_allowance>
+    </country>
+    
+    <!-- F -->
+    <country>
+      <name>Fiji</name>
+      <country_code>FJI</country_code>
+      <daily_allowance_24h>32</daily_allowance_24h>
+      <daily_allowance_8h>21</daily_allowance_8h>
+      <hotel_allowance>183</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Finland</name>
+      <country_code>FIN</country_code>
+      <daily_allowance_24h>54</daily_allowance_24h>
+      <daily_allowance_8h>36</daily_allowance_8h>
+      <hotel_allowance>171</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>France</name>
+      <country_code>FRA</country_code>
+      <daily_allowance_24h>53</daily_allowance_24h>
+      <daily_allowance_8h>36</daily_allowance_8h>
+      <hotel_allowance>105</hotel_allowance>
+      <cities>
+        <city>
+          <name>Paris</name>
+          <note>Includes departments 77, 78, 91-95</note>
+          <daily_allowance_24h>58</daily_allowance_24h>
+          <daily_allowance_8h>39</daily_allowance_8h>
+          <hotel_allowance>159</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <!-- G -->
+    <country>
+      <name>Gabon</name>
+      <country_code>GAB</country_code>
+      <daily_allowance_24h>64</daily_allowance_24h>
+      <daily_allowance_8h>43</daily_allowance_8h>
+      <hotel_allowance>263</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Gambia</name>
+      <country_code>GMB</country_code>
+      <daily_allowance_24h>40</daily_allowance_24h>
+      <daily_allowance_8h>27</daily_allowance_8h>
+      <hotel_allowance>161</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Georgia</name>
+      <country_code>GEO</country_code>
+      <daily_allowance_24h>45</daily_allowance_24h>
+      <daily_allowance_8h>30</daily_allowance_8h>
+      <hotel_allowance>87</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Ghana</name>
+      <country_code>GHA</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>203</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Greece</name>
+      <country_code>GRC</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>150</hotel_allowance>
+      <cities>
+        <city>
+          <name>Athens</name>
+          <daily_allowance_24h>40</daily_allowance_24h>
+          <daily_allowance_8h>27</daily_allowance_8h>
+          <hotel_allowance>139</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Germany</name>
+      <country_code>DEU</country_code>
+      <daily_allowance_24h>32</daily_allowance_24h>
+      <daily_allowance_8h>16</daily_allowance_8h>
+      <hotel_allowance>90</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Guatemala</name>
+      <country_code>GTM</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>124</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Guinea</name>
+      <country_code>GIN</country_code>
+      <daily_allowance_24h>59</daily_allowance_24h>
+      <daily_allowance_8h>40</daily_allowance_8h>
+      <hotel_allowance>140</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Guinea-Bissau</name>
+      <country_code>GNB</country_code>
+      <daily_allowance_24h>32</daily_allowance_24h>
+      <daily_allowance_8h>21</daily_allowance_8h>
+      <hotel_allowance>113</hotel_allowance>
+    </country>
+    
+    <!-- H -->
+    <country>
+      <name>Haiti</name>
+      <country_code>HTI</country_code>
+      <daily_allowance_24h>58</daily_allowance_24h>
+      <daily_allowance_8h>39</daily_allowance_8h>
+      <hotel_allowance>130</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Honduras</name>
+      <country_code>HND</country_code>
+      <daily_allowance_24h>57</daily_allowance_24h>
+      <daily_allowance_8h>38</daily_allowance_8h>
+      <hotel_allowance>198</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Hungary</name>
+      <country_code>HUN</country_code>
+      <daily_allowance_24h>32</daily_allowance_24h>
+      <daily_allowance_8h>21</daily_allowance_8h>
+      <hotel_allowance>85</hotel_allowance>
+    </country>
+    
+    <!-- I -->
+    <country>
+      <name>Iceland</name>
+      <country_code>ISL</country_code>
+      <daily_allowance_24h>62</daily_allowance_24h>
+      <daily_allowance_8h>41</daily_allowance_8h>
+      <hotel_allowance>187</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>India</name>
+      <country_code>IND</country_code>
+      <daily_allowance_24h>22</daily_allowance_24h>
+      <daily_allowance_8h>15</daily_allowance_8h>
+      <hotel_allowance>80</hotel_allowance>
+      <cities>
+        <city>
+          <name>Bangalore</name>
+          <daily_allowance_24h>42</daily_allowance_24h>
+          <daily_allowance_8h>28</daily_allowance_8h>
+          <hotel_allowance>155</hotel_allowance>
+        </city>
+        <city>
+          <name>Chennai</name>
+          <daily_allowance_24h>22</daily_allowance_24h>
+          <daily_allowance_8h>15</daily_allowance_8h>
+          <hotel_allowance>80</hotel_allowance>
+        </city>
+        <city>
+          <name>Kolkata</name>
+          <daily_allowance_24h>32</daily_allowance_24h>
+          <daily_allowance_8h>21</daily_allowance_8h>
+          <hotel_allowance>167</hotel_allowance>
+        </city>
+        <city>
+          <name>Mumbai</name>
+          <daily_allowance_24h>53</daily_allowance_24h>
+          <daily_allowance_8h>36</daily_allowance_8h>
+          <hotel_allowance>218</hotel_allowance>
+        </city>
+        <city>
+          <name>New Delhi</name>
+          <daily_allowance_24h>46</daily_allowance_24h>
+          <daily_allowance_8h>31</daily_allowance_8h>
+          <hotel_allowance>211</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Indonesia</name>
+      <country_code>IDN</country_code>
+      <daily_allowance_24h>45</daily_allowance_24h>
+      <daily_allowance_8h>30</daily_allowance_8h>
+      <hotel_allowance>179</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Iran</name>
+      <country_code>IRN</country_code>
+      <daily_allowance_24h>33</daily_allowance_24h>
+      <daily_allowance_8h>22</daily_allowance_8h>
+      <hotel_allowance>196</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Ireland</name>
+      <country_code>IRL</country_code>
+      <daily_allowance_24h>58</daily_allowance_24h>
+      <daily_allowance_8h>39</daily_allowance_8h>
+      <hotel_allowance>129</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Israel</name>
+      <country_code>ISR</country_code>
+      <daily_allowance_24h>66</daily_allowance_24h>
+      <daily_allowance_8h>44</daily_allowance_8h>
+      <hotel_allowance>190</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Italy</name>
+      <country_code>ITA</country_code>
+      <daily_allowance_24h>42</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>150</hotel_allowance>
+      <cities>
+        <city>
+          <name>Milan</name>
+          <daily_allowance_24h>42</daily_allowance_24h>
+          <daily_allowance_8h>28</daily_allowance_8h>
+          <hotel_allowance>191</hotel_allowance>
+        </city>
+        <city>
+          <name>Rome</name>
+          <daily_allowance_24h>48</daily_allowance_24h>
+          <daily_allowance_8h>32</daily_allowance_8h>
+          <hotel_allowance>150</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <!-- J -->
+    <country>
+      <name>Jamaica</name>
+      <country_code>JAM</country_code>
+      <daily_allowance_24h>39</daily_allowance_24h>
+      <daily_allowance_8h>26</daily_allowance_8h>
+      <hotel_allowance>171</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Japan</name>
+      <country_code>JPN</country_code>
+      <daily_allowance_24h>33</daily_allowance_24h>
+      <daily_allowance_8h>22</daily_allowance_8h>
+      <hotel_allowance>141</hotel_allowance>
+      <cities>
+        <city>
+          <name>Tokyo</name>
+          <daily_allowance_24h>50</daily_allowance_24h>
+          <daily_allowance_8h>33</daily_allowance_8h>
+          <hotel_allowance>285</hotel_allowance>
+        </city>
+        <city>
+          <name>Osaka</name>
+          <daily_allowance_24h>33</daily_allowance_24h>
+          <daily_allowance_8h>22</daily_allowance_8h>
+          <hotel_allowance>141</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Jordan</name>
+      <country_code>JOR</country_code>
+      <daily_allowance_24h>57</daily_allowance_24h>
+      <daily_allowance_8h>38</daily_allowance_8h>
+      <hotel_allowance>134</hotel_allowance>
+    </country>
+    
+    <!-- K -->
+    <country>
+      <name>Kazakhstan</name>
+      <country_code>KAZ</country_code>
+      <daily_allowance_24h>33</daily_allowance_24h>
+      <daily_allowance_8h>22</daily_allowance_8h>
+      <hotel_allowance>108</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Kenya</name>
+      <country_code>KEN</country_code>
+      <daily_allowance_24h>51</daily_allowance_24h>
+      <daily_allowance_8h>34</daily_allowance_8h>
+      <hotel_allowance>219</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Korea, Democratic People's Republic</name>
+      <country_code>PRK</country_code>
+      <daily_allowance_24h>28</daily_allowance_24h>
+      <daily_allowance_8h>19</daily_allowance_8h>
+      <hotel_allowance>92</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Korea, Republic</name>
+      <country_code>KOR</country_code>
+      <daily_allowance_24h>48</daily_allowance_24h>
+      <daily_allowance_8h>32</daily_allowance_8h>
+      <hotel_allowance>108</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Kosovo</name>
+      <country_code>XKX</country_code>
+      <daily_allowance_24h>24</daily_allowance_24h>
+      <daily_allowance_8h>16</daily_allowance_8h>
+      <hotel_allowance>71</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Kuwait</name>
+      <country_code>KWT</country_code>
+      <daily_allowance_24h>56</daily_allowance_24h>
+      <daily_allowance_8h>37</daily_allowance_8h>
+      <hotel_allowance>241</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Kyrgyzstan</name>
+      <country_code>KGZ</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>74</hotel_allowance>
+    </country>
+    
+    <!-- L -->
+    <country>
+      <name>Laos</name>
+      <country_code>LAO</country_code>
+      <daily_allowance_24h>35</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>71</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Latvia</name>
+      <country_code>LVA</country_code>
+      <daily_allowance_24h>35</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>76</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Lebanon</name>
+      <country_code>LBN</country_code>
+      <daily_allowance_24h>69</daily_allowance_24h>
+      <daily_allowance_8h>46</daily_allowance_8h>
+      <hotel_allowance>146</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Lesotho</name>
+      <country_code>LSO</country_code>
+      <daily_allowance_24h>28</daily_allowance_24h>
+      <daily_allowance_8h>19</daily_allowance_8h>
+      <hotel_allowance>104</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Liberia</name>
+      <country_code>LBR</country_code>
+      <daily_allowance_24h>65</daily_allowance_24h>
+      <daily_allowance_8h>44</daily_allowance_8h>
+      <hotel_allowance>173</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Libya</name>
+      <country_code>LBY</country_code>
+      <daily_allowance_24h>63</daily_allowance_24h>
+      <daily_allowance_8h>42</daily_allowance_8h>
+      <hotel_allowance>135</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Liechtenstein</name>
+      <country_code>LIE</country_code>
+      <daily_allowance_24h>56</daily_allowance_24h>
+      <daily_allowance_8h>37</daily_allowance_8h>
+      <hotel_allowance>190</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Lithuania</name>
+      <country_code>LTU</country_code>
+      <daily_allowance_24h>26</daily_allowance_24h>
+      <daily_allowance_8h>17</daily_allowance_8h>
+      <hotel_allowance>109</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Luxembourg</name>
+      <country_code>LUX</country_code>
+      <daily_allowance_24h>63</daily_allowance_24h>
+      <daily_allowance_8h>42</daily_allowance_8h>
+      <hotel_allowance>139</hotel_allowance>
+      <note>Default rates for countries not listed</note>
+    </country>
+    
+    <!-- M -->
+    <country>
+      <name>Madagascar</name>
+      <country_code>MDG</country_code>
+      <daily_allowance_24h>33</daily_allowance_24h>
+      <daily_allowance_8h>22</daily_allowance_8h>
+      <hotel_allowance>116</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Malawi</name>
+      <country_code>MWI</country_code>
+      <daily_allowance_24h>41</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>109</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Malaysia</name>
+      <country_code>MYS</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>86</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Maldives</name>
+      <country_code>MDV</country_code>
+      <daily_allowance_24h>70</daily_allowance_24h>
+      <daily_allowance_8h>47</daily_allowance_8h>
+      <hotel_allowance>200</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Mali</name>
+      <country_code>MLI</country_code>
+      <daily_allowance_24h>38</daily_allowance_24h>
+      <daily_allowance_8h>25</daily_allowance_8h>
+      <hotel_allowance>120</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Malta</name>
+      <country_code>MLT</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>114</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Marshall Islands</name>
+      <country_code>MHL</country_code>
+      <daily_allowance_24h>63</daily_allowance_24h>
+      <daily_allowance_8h>42</daily_allowance_8h>
+      <hotel_allowance>102</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Mauritania</name>
+      <country_code>MRT</country_code>
+      <daily_allowance_24h>35</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>86</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Mauritius</name>
+      <country_code>MUS</country_code>
+      <daily_allowance_24h>44</daily_allowance_24h>
+      <daily_allowance_8h>29</daily_allowance_8h>
+      <hotel_allowance>172</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Mexico</name>
+      <country_code>MEX</country_code>
+      <daily_allowance_24h>48</daily_allowance_24h>
+      <daily_allowance_8h>32</daily_allowance_8h>
+      <hotel_allowance>177</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Moldova, Republic</name>
+      <country_code>MDA</country_code>
+      <daily_allowance_24h>26</daily_allowance_24h>
+      <daily_allowance_8h>17</daily_allowance_8h>
+      <hotel_allowance>73</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Monaco</name>
+      <country_code>MCO</country_code>
+      <daily_allowance_24h>52</daily_allowance_24h>
+      <daily_allowance_8h>35</daily_allowance_8h>
+      <hotel_allowance>187</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Mongolia</name>
+      <country_code>MNG</country_code>
+      <daily_allowance_24h>23</daily_allowance_24h>
+      <daily_allowance_8h>16</daily_allowance_8h>
+      <hotel_allowance>92</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Montenegro</name>
+      <country_code>MNE</country_code>
+      <daily_allowance_24h>32</daily_allowance_24h>
+      <daily_allowance_8h>21</daily_allowance_8h>
+      <hotel_allowance>85</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Morocco</name>
+      <country_code>MAR</country_code>
+      <daily_allowance_24h>41</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>87</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Mozambique</name>
+      <country_code>MOZ</country_code>
+      <daily_allowance_24h>51</daily_allowance_24h>
+      <daily_allowance_8h>34</daily_allowance_8h>
+      <hotel_allowance>208</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Myanmar</name>
+      <country_code>MMR</country_code>
+      <daily_allowance_24h>23</daily_allowance_24h>
+      <daily_allowance_8h>16</daily_allowance_8h>
+      <hotel_allowance>103</hotel_allowance>
+    </country>
+    
+    <!-- N -->
+    <country>
+      <name>Namibia</name>
+      <country_code>NAM</country_code>
+      <daily_allowance_24h>30</daily_allowance_24h>
+      <daily_allowance_8h>20</daily_allowance_8h>
+      <hotel_allowance>112</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Nepal</name>
+      <country_code>NPL</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>126</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Netherlands</name>
+      <country_code>NLD</country_code>
+      <daily_allowance_24h>47</daily_allowance_24h>
+      <daily_allowance_8h>32</daily_allowance_8h>
+      <hotel_allowance>122</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>New Zealand</name>
+      <country_code>NZL</country_code>
+      <daily_allowance_24h>58</daily_allowance_24h>
+      <daily_allowance_8h>39</daily_allowance_8h>
+      <hotel_allowance>148</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Nicaragua</name>
+      <country_code>NIC</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>105</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Niger</name>
+      <country_code>NER</country_code>
+      <daily_allowance_24h>42</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>131</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Nigeria</name>
+      <country_code>NGA</country_code>
+      <daily_allowance_24h>46</daily_allowance_24h>
+      <daily_allowance_8h>31</daily_allowance_8h>
+      <hotel_allowance>182</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>North Macedonia</name>
+      <country_code>MKD</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>89</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Norway</name>
+      <country_code>NOR</country_code>
+      <daily_allowance_24h>75</daily_allowance_24h>
+      <daily_allowance_8h>50</daily_allowance_8h>
+      <hotel_allowance>139</hotel_allowance>
+    </country>
+    
+    <!-- O -->
+    <country>
+      <name>Oman</name>
+      <country_code>OMN</country_code>
+      <daily_allowance_24h>64</daily_allowance_24h>
+      <daily_allowance_8h>43</daily_allowance_8h>
+      <hotel_allowance>141</hotel_allowance>
+    </country>
+    
+    <!-- P -->
+    <country>
+      <name>Pakistan</name>
+      <country_code>PAK</country_code>
+      <daily_allowance_24h>34</daily_allowance_24h>
+      <daily_allowance_8h>23</daily_allowance_8h>
+      <hotel_allowance>122</hotel_allowance>
+      <cities>
+        <city>
+          <name>Islamabad</name>
+          <daily_allowance_24h>23</daily_allowance_24h>
+          <daily_allowance_8h>16</daily_allowance_8h>
+          <hotel_allowance>238</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Palau</name>
+      <country_code>PLW</country_code>
+      <daily_allowance_24h>51</daily_allowance_24h>
+      <daily_allowance_8h>34</daily_allowance_8h>
+      <hotel_allowance>193</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Panama</name>
+      <country_code>PAN</country_code>
+      <daily_allowance_24h>41</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>82</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Papua New Guinea</name>
+      <country_code>PNG</country_code>
+      <daily_allowance_24h>59</daily_allowance_24h>
+      <daily_allowance_8h>40</daily_allowance_8h>
+      <hotel_allowance>159</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Paraguay</name>
+      <country_code>PRY</country_code>
+      <daily_allowance_24h>39</daily_allowance_24h>
+      <daily_allowance_8h>26</daily_allowance_8h>
+      <hotel_allowance>124</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Peru</name>
+      <country_code>PER</country_code>
+      <daily_allowance_24h>34</daily_allowance_24h>
+      <daily_allowance_8h>23</daily_allowance_8h>
+      <hotel_allowance>143</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Philippines</name>
+      <country_code>PHL</country_code>
+      <daily_allowance_24h>41</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>140</hotel_allowance>
+      <note>Rates also apply to Micronesia</note>
+    </country>
+    
+    <country>
+      <name>Poland</name>
+      <country_code>POL</country_code>
+      <daily_allowance_24h>34</daily_allowance_24h>
+      <daily_allowance_8h>23</daily_allowance_8h>
+      <hotel_allowance>124</hotel_allowance>
+      <cities>
+        <city>
+          <name>Warsaw</name>
+          <daily_allowance_24h>40</daily_allowance_24h>
+          <daily_allowance_8h>27</daily_allowance_8h>
+          <hotel_allowance>143</hotel_allowance>
+        </city>
+        <city>
+          <name>Wroclaw</name>
+          <daily_allowance_24h>34</daily_allowance_24h>
+          <daily_allowance_8h>23</daily_allowance_8h>
+          <hotel_allowance>124</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Portugal</name>
+      <country_code>PRT</country_code>
+      <daily_allowance_24h>32</daily_allowance_24h>
+      <daily_allowance_8h>21</daily_allowance_8h>
+      <hotel_allowance>111</hotel_allowance>
+    </country>
+    
+    <!-- Q -->
+    <country>
+      <name>Qatar</name>
+      <country_code>QAT</country_code>
+      <daily_allowance_24h>56</daily_allowance_24h>
+      <daily_allowance_8h>37</daily_allowance_8h>
+      <hotel_allowance>149</hotel_allowance>
+    </country>
+    
+    <!-- R -->
+    <country>
+      <name>Romania</name>
+      <country_code>ROU</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>89</hotel_allowance>
+      <cities>
+        <city>
+          <name>Bucharest</name>
+          <daily_allowance_24h>32</daily_allowance_24h>
+          <daily_allowance_8h>21</daily_allowance_8h>
+          <hotel_allowance>92</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Russian Federation</name>
+      <country_code>RUS</country_code>
+      <daily_allowance_24h>28</daily_allowance_24h>
+      <daily_allowance_8h>19</daily_allowance_8h>
+      <hotel_allowance>133</hotel_allowance>
+      <cities>
+        <city>
+          <name>Moscow</name>
+          <daily_allowance_24h>30</daily_allowance_24h>
+          <daily_allowance_8h>20</daily_allowance_8h>
+          <hotel_allowance>235</hotel_allowance>
+        </city>
+        <city>
+          <name>St. Petersburg</name>
+          <daily_allowance_24h>28</daily_allowance_24h>
+          <daily_allowance_8h>19</daily_allowance_8h>
+          <hotel_allowance>133</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Rwanda</name>
+      <country_code>RWA</country_code>
+      <daily_allowance_24h>44</daily_allowance_24h>
+      <daily_allowance_8h>29</daily_allowance_8h>
+      <hotel_allowance>117</hotel_allowance>
+    </country>
+    
+    <!-- S -->
+    <country>
+      <name>Samoa</name>
+      <country_code>WSM</country_code>
+      <daily_allowance_24h>39</daily_allowance_24h>
+      <daily_allowance_8h>26</daily_allowance_8h>
+      <hotel_allowance>105</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>San Marino</name>
+      <country_code>SMR</country_code>
+      <daily_allowance_24h>34</daily_allowance_24h>
+      <daily_allowance_8h>23</daily_allowance_8h>
+      <hotel_allowance>79</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>São Tomé and Príncipe</name>
+      <country_code>STP</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>147</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Saudi Arabia</name>
+      <country_code>SAU</country_code>
+      <daily_allowance_24h>56</daily_allowance_24h>
+      <daily_allowance_8h>37</daily_allowance_8h>
+      <hotel_allowance>181</hotel_allowance>
+      <cities>
+        <city>
+          <name>Jeddah</name>
+          <daily_allowance_24h>57</daily_allowance_24h>
+          <daily_allowance_8h>38</daily_allowance_8h>
+          <hotel_allowance>181</hotel_allowance>
+        </city>
+        <city>
+          <name>Riyadh</name>
+          <daily_allowance_24h>56</daily_allowance_24h>
+          <daily_allowance_8h>37</daily_allowance_8h>
+          <hotel_allowance>186</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Senegal</name>
+      <country_code>SEN</country_code>
+      <daily_allowance_24h>42</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>190</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Serbia</name>
+      <country_code>SRB</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>97</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Sierra Leone</name>
+      <country_code>SLE</country_code>
+      <daily_allowance_24h>57</daily_allowance_24h>
+      <daily_allowance_8h>38</daily_allowance_8h>
+      <hotel_allowance>145</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Singapore</name>
+      <country_code>SGP</country_code>
+      <daily_allowance_24h>71</daily_allowance_24h>
+      <daily_allowance_8h>48</daily_allowance_8h>
+      <hotel_allowance>277</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Slovak Republic</name>
+      <country_code>SVK</country_code>
+      <daily_allowance_24h>33</daily_allowance_24h>
+      <daily_allowance_8h>22</daily_allowance_8h>
+      <hotel_allowance>121</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Slovenia</name>
+      <country_code>SVN</country_code>
+      <daily_allowance_24h>38</daily_allowance_24h>
+      <daily_allowance_8h>25</daily_allowance_8h>
+      <hotel_allowance>126</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>South Africa</name>
+      <country_code>ZAF</country_code>
+      <daily_allowance_24h>29</daily_allowance_24h>
+      <daily_allowance_8h>20</daily_allowance_8h>
+      <hotel_allowance>109</hotel_allowance>
+      <cities>
+        <city>
+          <name>Cape Town</name>
+          <daily_allowance_24h>33</daily_allowance_24h>
+          <daily_allowance_8h>22</daily_allowance_8h>
+          <hotel_allowance>130</hotel_allowance>
+        </city>
+        <city>
+          <name>Johannesburg</name>
+          <daily_allowance_24h>36</daily_allowance_24h>
+          <daily_allowance_8h>24</daily_allowance_8h>
+          <hotel_allowance>129</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>South Sudan</name>
+      <country_code>SSD</country_code>
+      <daily_allowance_24h>51</daily_allowance_24h>
+      <daily_allowance_8h>34</daily_allowance_8h>
+      <hotel_allowance>159</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Spain</name>
+      <country_code>ESP</country_code>
+      <daily_allowance_24h>34</daily_allowance_24h>
+      <daily_allowance_8h>23</daily_allowance_8h>
+      <hotel_allowance>103</hotel_allowance>
+      <cities>
+        <city>
+          <name>Barcelona</name>
+          <daily_allowance_24h>34</daily_allowance_24h>
+          <daily_allowance_8h>23</daily_allowance_8h>
+          <hotel_allowance>144</hotel_allowance>
+        </city>
+        <city>
+          <name>Canary Islands</name>
+          <daily_allowance_24h>36</daily_allowance_24h>
+          <daily_allowance_8h>24</daily_allowance_8h>
+          <hotel_allowance>103</hotel_allowance>
+        </city>
+        <city>
+          <name>Madrid</name>
+          <daily_allowance_24h>42</daily_allowance_24h>
+          <daily_allowance_8h>28</daily_allowance_8h>
+          <hotel_allowance>131</hotel_allowance>
+        </city>
+        <city>
+          <name>Palma de Mallorca</name>
+          <daily_allowance_24h>44</daily_allowance_24h>
+          <daily_allowance_8h>29</daily_allowance_8h>
+          <hotel_allowance>142</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Sri Lanka</name>
+      <country_code>LKA</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>112</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Sudan</name>
+      <country_code>SDN</country_code>
+      <daily_allowance_24h>33</daily_allowance_24h>
+      <daily_allowance_8h>22</daily_allowance_8h>
+      <hotel_allowance>195</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Sweden</name>
+      <country_code>SWE</country_code>
+      <daily_allowance_24h>66</daily_allowance_24h>
+      <daily_allowance_8h>44</daily_allowance_8h>
+      <hotel_allowance>140</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Switzerland</name>
+      <country_code>CHE</country_code>
+      <daily_allowance_24h>64</daily_allowance_24h>
+      <daily_allowance_8h>43</daily_allowance_8h>
+      <hotel_allowance>180</hotel_allowance>
+      <cities>
+        <city>
+          <name>Geneva</name>
+          <daily_allowance_24h>66</daily_allowance_24h>
+          <daily_allowance_8h>44</daily_allowance_8h>
+          <hotel_allowance>186</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Syria</name>
+      <country_code>SYR</country_code>
+      <daily_allowance_24h>38</daily_allowance_24h>
+      <daily_allowance_8h>25</daily_allowance_8h>
+      <hotel_allowance>140</hotel_allowance>
+    </country>
+    
+    <!-- T -->
+    <country>
+      <name>Taiwan</name>
+      <country_code>TWN</country_code>
+      <daily_allowance_24h>51</daily_allowance_24h>
+      <daily_allowance_8h>34</daily_allowance_8h>
+      <hotel_allowance>174</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Tajikistan</name>
+      <country_code>TJK</country_code>
+      <daily_allowance_24h>27</daily_allowance_24h>
+      <daily_allowance_8h>18</daily_allowance_8h>
+      <hotel_allowance>85</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Tanzania</name>
+      <country_code>TZA</country_code>
+      <daily_allowance_24h>44</daily_allowance_24h>
+      <daily_allowance_8h>29</daily_allowance_8h>
+      <hotel_allowance>97</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Thailand</name>
+      <country_code>THA</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>114</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Togo</name>
+      <country_code>TGO</country_code>
+      <daily_allowance_24h>39</daily_allowance_24h>
+      <daily_allowance_8h>26</daily_allowance_8h>
+      <hotel_allowance>118</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Tonga</name>
+      <country_code>TON</country_code>
+      <daily_allowance_24h>29</daily_allowance_24h>
+      <daily_allowance_8h>20</daily_allowance_8h>
+      <hotel_allowance>102</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Trinidad and Tobago</name>
+      <country_code>TTO</country_code>
+      <daily_allowance_24h>66</daily_allowance_24h>
+      <daily_allowance_8h>44</daily_allowance_8h>
+      <hotel_allowance>203</hotel_allowance>
+      <note>Rates also apply to: Antigua and Barbuda, Dominica, Grenada, Guyana, St. Kitts and Nevis, St. Lucia, St. Vincent and Grenadines, Suriname</note>
+    </country>
+    
+    <country>
+      <name>Tunisia</name>
+      <country_code>TUN</country_code>
+      <daily_allowance_24h>40</daily_allowance_24h>
+      <daily_allowance_8h>27</daily_allowance_8h>
+      <hotel_allowance>144</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Turkey</name>
+      <country_code>TUR</country_code>
+      <daily_allowance_24h>24</daily_allowance_24h>
+      <daily_allowance_8h>16</daily_allowance_8h>
+      <hotel_allowance>107</hotel_allowance>
+      <cities>
+        <city>
+          <name>Ankara</name>
+          <daily_allowance_24h>32</daily_allowance_24h>
+          <daily_allowance_8h>21</daily_allowance_8h>
+          <hotel_allowance>110</hotel_allowance>
+        </city>
+        <city>
+          <name>Izmir</name>
+          <daily_allowance_24h>44</daily_allowance_24h>
+          <daily_allowance_8h>29</daily_allowance_8h>
+          <hotel_allowance>120</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Turkmenistan</name>
+      <country_code>TKM</country_code>
+      <daily_allowance_24h>28</daily_allowance_24h>
+      <daily_allowance_8h>19</daily_allowance_8h>
+      <hotel_allowance>135</hotel_allowance>
+    </country>
+    
+    <!-- U -->
+    <country>
+      <name>Uganda</name>
+      <country_code>UGA</country_code>
+      <daily_allowance_24h>41</daily_allowance_24h>
+      <daily_allowance_8h>28</daily_allowance_8h>
+      <hotel_allowance>143</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Ukraine</name>
+      <country_code>UKR</country_code>
+      <daily_allowance_24h>26</daily_allowance_24h>
+      <daily_allowance_8h>17</daily_allowance_8h>
+      <hotel_allowance>98</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>United Arab Emirates</name>
+      <country_code>ARE</country_code>
+      <daily_allowance_24h>65</daily_allowance_24h>
+      <daily_allowance_8h>44</daily_allowance_8h>
+      <hotel_allowance>156</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>United Kingdom</name>
+      <country_code>GBR</country_code>
+      <daily_allowance_24h>52</daily_allowance_24h>
+      <daily_allowance_8h>35</daily_allowance_8h>
+      <hotel_allowance>99</hotel_allowance>
+      <cities>
+        <city>
+          <name>London</name>
+          <daily_allowance_24h>66</daily_allowance_24h>
+          <daily_allowance_8h>44</daily_allowance_8h>
+          <hotel_allowance>163</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>United States of America</name>
+      <country_code>USA</country_code>
+      <daily_allowance_24h>59</daily_allowance_24h>
+      <daily_allowance_8h>40</daily_allowance_8h>
+      <hotel_allowance>182</hotel_allowance>
+      <cities>
+        <city>
+          <name>Atlanta</name>
+          <daily_allowance_24h>77</daily_allowance_24h>
+          <daily_allowance_8h>52</daily_allowance_8h>
+          <hotel_allowance>182</hotel_allowance>
+        </city>
+        <city>
+          <name>Boston</name>
+          <daily_allowance_24h>63</daily_allowance_24h>
+          <daily_allowance_8h>42</daily_allowance_8h>
+          <hotel_allowance>333</hotel_allowance>
+        </city>
+        <city>
+          <name>Chicago</name>
+          <daily_allowance_24h>65</daily_allowance_24h>
+          <daily_allowance_8h>44</daily_allowance_8h>
+          <hotel_allowance>233</hotel_allowance>
+        </city>
+        <city>
+          <name>Houston</name>
+          <daily_allowance_24h>62</daily_allowance_24h>
+          <daily_allowance_8h>41</daily_allowance_8h>
+          <hotel_allowance>204</hotel_allowance>
+        </city>
+        <city>
+          <name>Los Angeles</name>
+          <daily_allowance_24h>64</daily_allowance_24h>
+          <daily_allowance_8h>43</daily_allowance_8h>
+          <hotel_allowance>262</hotel_allowance>
+        </city>
+        <city>
+          <name>Miami</name>
+          <daily_allowance_24h>65</daily_allowance_24h>
+          <daily_allowance_8h>44</daily_allowance_8h>
+          <hotel_allowance>256</hotel_allowance>
+        </city>
+        <city>
+          <name>New York City</name>
+          <daily_allowance_24h>66</daily_allowance_24h>
+          <daily_allowance_8h>44</daily_allowance_8h>
+          <hotel_allowance>308</hotel_allowance>
+        </city>
+        <city>
+          <name>San Francisco</name>
+          <daily_allowance_24h>59</daily_allowance_24h>
+          <daily_allowance_8h>40</daily_allowance_8h>
+          <hotel_allowance>327</hotel_allowance>
+        </city>
+        <city>
+          <name>Washington, D.C.</name>
+          <daily_allowance_24h>66</daily_allowance_24h>
+          <daily_allowance_8h>44</daily_allowance_8h>
+          <hotel_allowance>203</hotel_allowance>
+        </city>
+      </cities>
+    </country>
+    
+    <country>
+      <name>Uruguay</name>
+      <country_code>URY</country_code>
+      <daily_allowance_24h>40</daily_allowance_24h>
+      <daily_allowance_8h>27</daily_allowance_8h>
+      <hotel_allowance>113</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Uzbekistan</name>
+      <country_code>UZB</country_code>
+      <daily_allowance_24h>34</daily_allowance_24h>
+      <daily_allowance_8h>23</daily_allowance_8h>
+      <hotel_allowance>104</hotel_allowance>
+    </country>
+    
+    <!-- V -->
+    <country>
+      <name>Vatican City</name>
+      <country_code>VAT</country_code>
+      <daily_allowance_24h>48</daily_allowance_24h>
+      <daily_allowance_8h>32</daily_allowance_8h>
+      <hotel_allowance>150</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Venezuela</name>
+      <country_code>VEN</country_code>
+      <daily_allowance_24h>45</daily_allowance_24h>
+      <daily_allowance_8h>30</daily_allowance_8h>
+      <hotel_allowance>127</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Vietnam</name>
+      <country_code>VNM</country_code>
+      <daily_allowance_24h>36</daily_allowance_24h>
+      <daily_allowance_8h>24</daily_allowance_8h>
+      <hotel_allowance>111</hotel_allowance>
+    </country>
+    
+    <!-- Y -->
+    <country>
+      <name>Yemen</name>
+      <country_code>YEM</country_code>
+      <daily_allowance_24h>24</daily_allowance_24h>
+      <daily_allowance_8h>16</daily_allowance_8h>
+      <hotel_allowance>95</hotel_allowance>
+    </country>
+    
+    <!-- Z -->
+    <country>
+      <name>Zambia</name>
+      <country_code>ZMB</country_code>
+      <daily_allowance_24h>38</daily_allowance_24h>
+      <daily_allowance_8h>25</daily_allowance_8h>
+      <hotel_allowance>105</hotel_allowance>
+    </country>
+    
+    <country>
+      <name>Zimbabwe</name>
+      <country_code>ZWE</country_code>
+      <daily_allowance_24h>63</daily_allowance_24h>
+      <daily_allowance_8h>42</daily_allowance_8h>
+      <hotel_allowance>198</hotel_allowance>
+    </country>
+    
+  </countries>
+</travel_rates>

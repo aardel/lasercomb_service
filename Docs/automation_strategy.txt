@@ -1,0 +1,898 @@
+===============================================================================
+COMPLETE TRAVEL COST AUTOMATION STRATEGY
+For German Company with Official Government Rates
+===============================================================================
+
+GOAL: Eliminate manual searching for flights, car rentals, hotels by automating
+everything using APIs and official German government travel expense rates.
+
+===============================================================================
+1. OFFICIAL GERMAN GOVERNMENT RATES (ARVVwV 2025)
+===============================================================================
+
+1.1 What Are These Official Rates?
+----------------------------------
+Source: Auslandsreisekostenverordnung (ARV) - Foreign Travel Expenses Ordinance
+Published by: Bundesministerium der Finanzen (Federal Ministry of Finance)
+Updated: Annually (current: ARVVwV 2025)
+
+Official Document: "Allgemeine Verwaltungsvorschrift über die Neufestsetzung 
+der Auslandstage- und –übernachtungsgelder" (General Administrative Provision 
+on Foreign Per Diem and Accommodation Allowances)
+
+Coverage: 180+ countries and regions worldwide
+
+1.2 What's Included in Official Rates
+-------------------------------------
+
+For Each Country, Government Specifies:
+
+A) Daily Allowances (Tagesgeld):
+   - Small per diem (>8 hours): Variable by country
+   - Large per diem (24+ hours): Variable by country
+   
+B) Overnight Allowances (Übernachtungsgeld):
+   - Maximum hotel rate per night: Variable by country
+   - Different rates for major cities vs. rest of country
+
+C) Germany Domestic Rates (2025):
+   - >8 hours: 14 €
+   - 24+ hours: 28 €
+   - Hotel: 20 € (without receipt) or actual cost
+   - Mileage: 0.30 € per km (official) or 0.88 € (you use higher rate)
+
+1.3 Example Official Rates (2025)
+---------------------------------
+
+Country/City         | Daily Allowance | Hotel Rate
+---------------------|-----------------|------------
+Germany              | 14/28 €         | 20 € or actual
+France (Paris)       | 48 €            | 159 €
+UK (London)          | 47 €            | 200 €
+USA (Washington DC)  | 59 €            | 306 €
+USA (New York)       | 59 €            | 387 €
+Switzerland (Zurich) | 69 €            | 212 €
+Austria (Vienna)     | 40 €            | 140 €
+Italy (Rome)         | 42 €            | 145 €
+Spain (Madrid)       | 42 €            | 136 €
+China (Beijing)      | 47 €            | 225 €
+Japan (Tokyo)        | 52 €            | 244 €
+Dubai                | 58 €            | 259 €
+
+Note: Your template uses 115 € for Germany hotels - this is your company rate,
+which is higher than the government minimum (20 €).
+
+1.4 How to Get Official Rates
+-----------------------------
+
+Option A: Download Official PDF
+- URL: https://www.bundesfinanzministerium.de/
+- Search for: "Auslandsreisekostenverordnung 2025"
+- Download: PDF with complete country list
+- Format: Table with country, city, daily rate, hotel rate
+
+Option B: Scrape from Official Sources
+- Several websites publish this data
+- Example: Rydoo Compliance, Spendesk, etc.
+- They extract from official BMF documents
+
+Option C: Manual Entry into Database (ONE TIME)
+- Create rates table in database
+- Enter all 180+ countries
+- Update annually when BMF publishes new rates
+
+===============================================================================
+2. AUTOMATION STRATEGY - COMPLETE WORKFLOW
+===============================================================================
+
+2.1 System Architecture
+----------------------
+
+                    USER INPUTS
+                        │
+                        ↓
+        ┌───────────────────────────┐
+        │  TRAVEL PLANNER SYSTEM    │
+        │  - Customer Selection     │
+        │  - Date Selection         │
+        │  - Job Type               │
+        └───────┬───────────────────┘
+                │
+                ↓
+        ┌───────────────────────────┐
+        │  AUTOMATION ENGINE        │
+        └───────┬───────────────────┘
+                │
+    ┌───────────┼───────────┬───────────────┐
+    │           │           │               │
+    ↓           ↓           ↓               ↓
+[Rates DB]  [Flight    [Car Rental]  [Distance/
+            Search]                   Route API]
+    │           │           │               │
+    └───────────┼───────────┴───────────────┘
+                │
+                ↓
+        ┌───────────────────────────┐
+        │  COST CALCULATOR          │
+        │  - Compare Options        │
+        │  - Apply Rules            │
+        │  - Calculate Totals       │
+        └───────┬───────────────────┘
+                │
+                ↓
+        ┌───────────────────────────┐
+        │  QUOTATION GENERATOR      │
+        │  - Fill Template          │
+        │  - Generate PDF           │
+        └───────────────────────────┘
+
+2.2 Complete Automation Flow
+----------------------------
+
+STEP 1: User Inputs
+- Customer: "ABC Manufacturing, Hamburg"
+- Date: "January 15, 2025"
+- Job Type: "Installation"
+- Estimated Work Hours: 6 hours
+
+STEP 2: System Fetches Data
+- Customer location: Hamburg, Germany
+- Engineer location: Munich, Germany
+- Distance: 780 km (from Google Maps)
+- Country: Germany (domestic)
+
+STEP 3: Load Official Rates (FROM DATABASE)
+- Germany daily allowance >8h: 14 €
+- Germany daily allowance 24h: 28 €
+- Germany hotel rate: 115 € (your company rate)
+- Germany mileage: 0.88 € per km (your company rate)
+
+STEP 4: Parallel API Calls (AUTOMATIC)
+
+Call 1: Flight Search API
+- Origin: Munich (MUC)
+- Destination: Hamburg (HAM)
+- Date: January 15, 2025
+- Return: Same day
+- Result: 180 € one way, 360 € round trip
+
+Call 2: Google Maps Distance/Route
+- From: Munich
+- To: Hamburg
+- Result: 780 km, 7h 30min drive
+
+Call 3: Car Rental API (Optional, if needed)
+- Pickup: Munich
+- Dropoff: Hamburg
+- Date: January 15
+- Result: 85 €/day + fuel
+
+STEP 5: Calculate All Options
+
+Option A: FLIGHT
+- Flight cost: 360 €
+- Travel time: 4.5h × 2 (round trip) = 9h
+- Travel cost: 9h × 98 €/h = 882 €
+- Taxi to/from airports: 80 €
+- Parking at MUC: 50 €
+- Total: 360 + 882 + 80 + 50 = 1,372 €
+
+Option B: ROAD (Own Car)
+- Distance: 780 km × 2 = 1,560 km
+- Distance cost: 1,560 × 0.88 = 1,372.80 €
+- Travel time: 7.5h × 2 = 15h
+- Travel cost: 15h × 98 €/h = 1,470 €
+- Tolls (estimated): 25 €
+- Total: 1,372.80 + 1,470 + 25 = 2,867.80 €
+
+Option C: RENTAL CAR
+- Rental: 85 € + fuel 80 € = 165 €
+- Travel time: 15h × 98 €/h = 1,470 €
+- Tolls: 25 €
+- Total: 165 + 1,470 + 25 = 1,660 €
+
+Decision: FLIGHT (cheapest and fastest)
+
+STEP 6: Calculate Duration-Based Costs
+
+Trip Timeline:
+- Depart Munich: 8:00 AM
+- Arrive Hamburg: 12:30 PM (4.5h)
+- Work: 12:30 PM - 6:30 PM (6h)
+- Depart Hamburg: 7:30 PM
+- Arrive Munich: 11:30 PM (4h)
+- Total trip: 15.5 hours (same day)
+
+Daily Allowances:
+- Trip duration: 15.5 hours (>8h but <24h)
+- Tagesspesen >8h: 1 day × 14 € = 14 €
+- Tagesspesen >24h: 0 days × 28 € = 0 €
+
+Hotel:
+- Same day trip, no overnight
+- Hotel nights: 0 × 115 € = 0 €
+
+STEP 7: Fill Calculation Template (AUTOMATIC)
+
+Arbeitszeit: 6 h × 132 € = 792.00 €
+Reisezeit: 9 h × 98 € = 882.00 €
+Entfernung: 0 km × 0.88 € = 0.00 €
+
+Tagesspesen >24h: 0 t × 28 € = 0.00 €
+Tagesspesen >8h: 1 t × 14 € = 14.00 €
+
+Hotel: 0 t/ÜF × 115 € = 0.00 €
+Flugticket national: 360.00 €
+Taxi: 80.00 €
+Parken: 50.00 €
+
+komplette RK: 1,386.00 €
+
+STEP 8: Generate PDF Quotation
+
+All fields filled automatically!
+User only needs to review and approve.
+
+===============================================================================
+3. API INTEGRATIONS REQUIRED
+===============================================================================
+
+3.1 Flight Search APIs
+---------------------
+
+RECOMMENDED: Amadeus API
+- Coverage: Global
+- Features: Real-time prices, schedules, availability
+- Pricing: Free tier (2,000 calls/month), then ~$0.01/call
+- Documentation: https://developers.amadeus.com/
+
+Endpoints Needed:
+- Flight Offers Search: GET /v2/shopping/flight-offers
+- Flight Cheapest Date Search: GET /v1/shopping/flight-dates
+
+Example Request:
+```
+GET /v2/shopping/flight-offers
+?originLocationCode=MUC
+&destinationLocationCode=HAM
+&departureDate=2025-01-15
+&returnDate=2025-01-15
+&adults=1
+&currencyCode=EUR
+```
+
+Example Response:
+```json
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "flight-offer",
+      "price": {
+        "currency": "EUR",
+        "total": "180.00"
+      },
+      "itineraries": [
+        {
+          "duration": "PT1H15M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "MUC",
+                "at": "2025-01-15T09:00:00"
+              },
+              "arrival": {
+                "iataCode": "HAM",
+                "at": "2025-01-15T10:15:00"
+              },
+              "carrierCode": "LH",
+              "number": "2050"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+Alternative: Kiwi.com Tequila API
+- Good for complex routes
+- Multi-city support
+- Free tier available
+
+Alternative: Skyscanner API
+- Broad coverage
+- Price comparison
+- Requires application for access
+
+3.2 Distance & Route Calculation
+--------------------------------
+
+RECOMMENDED: Google Maps Distance Matrix API
+
+Features:
+- Distance in km
+- Duration in minutes
+- Traffic-aware routing
+- Multiple modes (driving, transit)
+
+Pricing:
+- $5 per 1,000 requests after free tier
+- Free: $200 credit/month (~40,000 requests)
+
+Example Request:
+```
+GET https://maps.googleapis.com/maps/api/distancematrix/json
+?origins=Munich,Germany
+&destinations=Hamburg,Germany
+&units=metric
+&key=YOUR_API_KEY
+```
+
+Example Response:
+```json
+{
+  "rows": [
+    {
+      "elements": [
+        {
+          "distance": {
+            "text": "780 km",
+            "value": 780000
+          },
+          "duration": {
+            "text": "7 hours 30 mins",
+            "value": 27000
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+Alternative: Mapbox Directions API
+- Similar features
+- Competitive pricing
+- Good alternative to Google
+
+3.3 Car Rental APIs
+------------------
+
+Option A: Rentalcars.com API (Booking.com Group)
+- Coverage: 900+ companies, 60,000+ locations
+- Real-time availability and prices
+- Requires partnership/license
+
+Option B: Kayak API
+- Aggregates multiple rental companies
+- Price comparison
+- Limited public API access
+
+Option C: Direct Integration
+- Sixt API
+- Europcar API
+- Hertz API
+- Each requires separate integration
+
+PRACTICAL RECOMMENDATION for MVP:
+- Start without car rental API
+- Use average rates from your experience
+- Add API later if frequently needed
+
+Estimated Car Rental Rates (Manual Entry):
+```javascript
+const carRentalRates = {
+  compact: {
+    daily_rate: 35,
+    fuel_cost_per_100km: 7,
+    deposit: 100
+  },
+  midsize: {
+    daily_rate: 50,
+    fuel_cost_per_100km: 8,
+    deposit: 150
+  },
+  suv: {
+    daily_rate: 75,
+    fuel_cost_per_100km: 10,
+    deposit: 200
+  }
+};
+```
+
+3.4 Toll Cost Calculation
+-------------------------
+
+RECOMMENDED: TollGuru API
+- Coverage: Europe, US, Canada, Australia
+- Real-time toll costs
+- Route-specific calculations
+
+Example Request:
+```
+POST https://apis.tollguru.com/toll/v2/origin-destination-waypoints
+{
+  "from": {
+    "lat": 48.1351,
+    "lng": 11.5820
+  },
+  "to": {
+    "lat": 53.5511,
+    "lng": 9.9937
+  },
+  "vehicleType": "2AxlesAuto"
+}
+```
+
+Alternative: Manual Toll Database
+- Create database of common routes
+- Update quarterly
+- Good for frequently traveled routes
+
+3.5 Airport/Taxi Cost Estimates
+-------------------------------
+
+No specific API needed.
+Create lookup table in database:
+
+```javascript
+const airportCosts = {
+  MUC: { // Munich
+    taxi_to_city: 45,
+    taxi_from_city: 45,
+    parking_per_day: 25,
+    public_transport: 15
+  },
+  HAM: { // Hamburg
+    taxi_to_city: 35,
+    taxi_from_city: 35,
+    parking_per_day: 20,
+    public_transport: 5
+  },
+  // Add all major airports
+};
+```
+
+===============================================================================
+4. OFFICIAL RATES DATABASE STRUCTURE
+===============================================================================
+
+4.1 Countries Rates Table
+-------------------------
+
+```sql
+CREATE TABLE country_travel_rates (
+  id UUID PRIMARY KEY,
+  country_code VARCHAR(3) NOT NULL, -- ISO 3166-1 alpha-3
+  country_name VARCHAR(100) NOT NULL,
+  city_name VARCHAR(100), -- NULL for nationwide rate
+  
+  -- Daily Allowances (Tagesgeld)
+  daily_allowance_8h DECIMAL(10,2), -- >8 hours
+  daily_allowance_24h DECIMAL(10,2), -- 24+ hours
+  
+  -- Overnight Allowances (Übernachtungsgeld)
+  hotel_rate_max DECIMAL(10,2), -- Maximum per night
+  hotel_rate_actual BOOLEAN DEFAULT true, -- Can use actual costs
+  
+  -- Additional Info
+  currency VARCHAR(3) DEFAULT 'EUR',
+  effective_from DATE NOT NULL,
+  effective_until DATE,
+  source_reference VARCHAR(255), -- ARVVwV 2025
+  
+  -- Timestamps
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  
+  -- Indexes
+  UNIQUE(country_code, city_name, effective_from)
+);
+
+-- Example Data
+INSERT INTO country_travel_rates VALUES
+('DEU', 'Germany', NULL, 14.00, 28.00, 20.00, true, 'EUR', '2025-01-01', NULL, 'ARVVwV 2025'),
+('FRA', 'France', 'Paris', 48.00, 48.00, 159.00, true, 'EUR', '2025-01-01', NULL, 'ARVVwV 2025'),
+('FRA', 'France', NULL, 42.00, 42.00, 130.00, true, 'EUR', '2025-01-01', NULL, 'ARVVwV 2025'),
+('GBR', 'United Kingdom', 'London', 47.00, 47.00, 200.00, true, 'GBP', '2025-01-01', NULL, 'ARVVwV 2025'),
+('USA', 'United States', 'New York', 59.00, 59.00, 387.00, true, 'USD', '2025-01-01', NULL, 'ARVVwV 2025'),
+('USA', 'United States', 'Washington', 59.00, 59.00, 306.00, true, 'USD', '2025-01-01', NULL, 'ARVVwV 2025'),
+('CHE', 'Switzerland', 'Zurich', 69.00, 69.00, 212.00, true, 'CHF', '2025-01-01', NULL, 'ARVVwV 2025');
+```
+
+4.2 Company Custom Rates Table
+------------------------------
+
+For rates higher than government minimum:
+
+```sql
+CREATE TABLE company_custom_rates (
+  id UUID PRIMARY KEY,
+  country_code VARCHAR(3) NOT NULL,
+  city_name VARCHAR(100),
+  
+  -- Override Rates (higher than government)
+  custom_hotel_rate DECIMAL(10,2), -- Your 115 € for Germany
+  custom_mileage_rate DECIMAL(10,2), -- Your 0.88 € vs gov 0.30 €
+  custom_travel_hour_rate DECIMAL(10,2), -- Your 98 €
+  custom_work_hour_rate DECIMAL(10,2), -- Your 132 €
+  
+  notes TEXT,
+  active BOOLEAN DEFAULT true,
+  
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO company_custom_rates VALUES
+(uuid_generate_v4(), 'DEU', NULL, 115.00, 0.88, 98.00, 132.00, 
+ 'Company rates higher than government minimum', true, NOW(), NOW());
+```
+
+4.3 Rate Lookup Function
+------------------------
+
+```javascript
+async function getTravelRates(countryCode, cityName = null) {
+  // First, check company custom rates
+  const customRate = await db.query(`
+    SELECT * FROM company_custom_rates
+    WHERE country_code = $1
+    AND (city_name = $2 OR city_name IS NULL)
+    AND active = true
+    ORDER BY city_name NULLS LAST
+    LIMIT 1
+  `, [countryCode, cityName]);
+  
+  // Then, get official government rates
+  const officialRate = await db.query(`
+    SELECT * FROM country_travel_rates
+    WHERE country_code = $1
+    AND (city_name = $2 OR city_name IS NULL)
+    AND effective_from <= CURRENT_DATE
+    AND (effective_until IS NULL OR effective_until >= CURRENT_DATE)
+    ORDER BY city_name NULLS LAST
+    LIMIT 1
+  `, [countryCode, cityName]);
+  
+  return {
+    official: officialRate.rows[0],
+    custom: customRate.rows[0],
+    // Use custom if available, otherwise official
+    applied: {
+      daily_allowance_8h: officialRate.rows[0].daily_allowance_8h,
+      daily_allowance_24h: officialRate.rows[0].daily_allowance_24h,
+      hotel_rate: customRate.rows[0]?.custom_hotel_rate || 
+                  officialRate.rows[0].hotel_rate_max,
+      mileage_rate: customRate.rows[0]?.custom_mileage_rate || 0.30,
+      travel_hour_rate: customRate.rows[0]?.custom_travel_hour_rate || 98,
+      work_hour_rate: customRate.rows[0]?.custom_work_hour_rate || 132
+    }
+  };
+}
+```
+
+===============================================================================
+5. AUTOMATED CALCULATION ENGINE
+===============================================================================
+
+5.1 Master Calculation Function
+-------------------------------
+
+```javascript
+async function calculateTripCosts(tripData) {
+  const {
+    customerId,
+    engineerId,
+    date,
+    workHours,
+    jobType
+  } = tripData;
+  
+  // 1. Get locations
+  const customer = await getCustomer(customerId);
+  const engineer = await getEngineer(engineerId);
+  
+  // 2. Determine country and get rates
+  const rates = await getTravelRates(
+    customer.country_code,
+    customer.city
+  );
+  
+  // 3. Calculate distance
+  const distance = await calculateDistance(
+    engineer.location,
+    customer.location
+  );
+  
+  // 4. Determine if domestic or international
+  const isDomestic = engineer.country === customer.country;
+  const needsFlight = distance.km > 300 || !isDomestic;
+  
+  // 5. Get travel options
+  let flightOption = null;
+  let roadOption = null;
+  
+  if (needsFlight || distance.km > 200) {
+    flightOption = await searchFlights({
+      from: engineer.nearest_airport,
+      to: customer.nearest_airport,
+      date: date,
+      returnDate: date // same day or calculate
+    });
+  }
+  
+  if (distance.km < 800 || isDomestic) {
+    roadOption = await calculateRoadCosts({
+      distance: distance.km,
+      duration: distance.duration_minutes,
+      rates: rates.applied
+    });
+  }
+  
+  // 6. Compare options and select best
+  const selectedOption = compareOptions(flightOption, roadOption);
+  
+  // 7. Calculate duration-based costs
+  const tripDuration = calculateTripDuration({
+    travelTime: selectedOption.travel_hours,
+    workHours: workHours,
+    setupTime: 1 // hour for setup/packup
+  });
+  
+  // 8. Calculate all cost components
+  const costs = {
+    // Working time
+    arbeitszeit_hours: workHours,
+    arbeitszeit_rate: rates.applied.work_hour_rate,
+    arbeitszeit_total: workHours * rates.applied.work_hour_rate,
+    
+    // Travel time
+    reisezeit_hours: selectedOption.travel_hours,
+    reisezeit_rate: rates.applied.travel_hour_rate,
+    reisezeit_total: selectedOption.travel_hours * rates.applied.travel_hour_rate,
+    
+    // Distance (only for road)
+    entfernung_km: selectedOption.type === 'road' ? distance.km : 0,
+    entfernung_rate: rates.applied.mileage_rate,
+    entfernung_total: selectedOption.type === 'road' ? 
+                     distance.km * rates.applied.mileage_rate : 0,
+    
+    // Daily allowances
+    tagesspesen_24h_days: Math.floor(tripDuration.hours / 24),
+    tagesspesen_24h_rate: rates.official.daily_allowance_24h,
+    tagesspesen_24h_total: Math.floor(tripDuration.hours / 24) * 
+                          rates.official.daily_allowance_24h,
+    
+    tagesspesen_8h_days: (tripDuration.hours > 8 && tripDuration.hours < 24) ? 1 : 
+                         (tripDuration.hours % 24 > 8 ? 1 : 0),
+    tagesspesen_8h_rate: rates.official.daily_allowance_8h,
+    tagesspesen_8h_total: ((tripDuration.hours > 8 && tripDuration.hours < 24) ? 1 : 
+                          (tripDuration.hours % 24 > 8 ? 1 : 0)) * 
+                          rates.official.daily_allowance_8h,
+    
+    // Hotel
+    hotel_nights: tripDuration.hours > 18 ? 
+                 Math.ceil((tripDuration.hours - 8) / 24) : 0,
+    hotel_rate: rates.applied.hotel_rate,
+    hotel_total: (tripDuration.hours > 18 ? 
+                 Math.ceil((tripDuration.hours - 8) / 24) : 0) * 
+                 rates.applied.hotel_rate,
+    
+    // Transportation specific
+    ...(selectedOption.type === 'flight' ? {
+      flight_international: !isDomestic ? selectedOption.price : 0,
+      flight_national: isDomestic ? selectedOption.price : 0,
+      taxi: selectedOption.taxi_costs || 0,
+      parken: selectedOption.parking_costs || 0
+    } : {
+      treibstoff: selectedOption.fuel_costs || 0,
+      maut: selectedOption.toll_costs || 0
+    })
+  };
+  
+  // 9. Calculate total
+  costs.komplette_rk = 
+    costs.reisezeit_total +
+    costs.entfernung_total +
+    costs.tagesspesen_24h_total +
+    costs.tagesspesen_8h_total +
+    costs.hotel_total +
+    (costs.flight_international || 0) +
+    (costs.flight_national || 0) +
+    (costs.taxi || 0) +
+    (costs.parken || 0) +
+    (costs.treibstoff || 0) +
+    (costs.maut || 0);
+  
+  costs.total_quotation = costs.komplette_rk + costs.arbeitszeit_total;
+  
+  return {
+    costs,
+    selectedOption,
+    rates: rates.applied,
+    tripDuration
+  };
+}
+```
+
+===============================================================================
+6. IMPLEMENTATION PRIORITIES
+===============================================================================
+
+PHASE 1: Foundation (Week 1-2)
+------------------------------
+Priority: HIGH
+Tasks:
+1. Create official rates database table
+2. Import ARVVwV 2025 data (180+ countries)
+3. Add company custom rates
+4. Build rate lookup function
+5. Test rate retrieval
+
+Deliverable: Rates database ready
+
+PHASE 2: Distance & Route (Week 2-3)
+------------------------------------
+Priority: HIGH
+Tasks:
+1. Integrate Google Maps Distance Matrix API
+2. Build distance calculation function
+3. Add route optimization (for combined trips)
+4. Cache frequent routes
+5. Test with sample locations
+
+Deliverable: Distance calculator working
+
+PHASE 3: Flight Search (Week 3-4)
+---------------------------------
+Priority: HIGH
+Tasks:
+1. Sign up for Amadeus API (free tier)
+2. Integrate flight search endpoint
+3. Build flight comparison logic
+4. Add airport lookup by city
+5. Handle round trips
+6. Test with sample routes
+
+Deliverable: Automatic flight search working
+
+PHASE 4: Calculation Engine (Week 4-5)
+-------------------------------------
+Priority: HIGH
+Tasks:
+1. Build master calculation function
+2. Implement all cost formulas
+3. Add duration calculation
+4. Add hotel night calculation
+5. Test with various scenarios
+
+Deliverable: Complete cost calculator
+
+PHASE 5: PDF Generation (Week 5-6)
+----------------------------------
+Priority: MEDIUM
+Tasks:
+1. Design PDF template matching your format
+2. Integrate calculation results
+3. Add company logo and branding
+4. Generate downloadable PDF
+5. Test output quality
+
+Deliverable: Automated quotation generation
+
+PHASE 6: Car Rental (Future)
+----------------------------
+Priority: LOW
+Tasks:
+1. Evaluate need based on usage
+2. Choose API provider
+3. Integrate if frequently needed
+
+Deliverable: Optional car rental search
+
+===============================================================================
+7. COST ANALYSIS
+===============================================================================
+
+7.1 API Costs (Monthly)
+----------------------
+
+Google Maps Distance Matrix:
+- Free tier: $200 credit = ~40,000 requests
+- Estimated usage: 500 requests/month
+- Cost: $0 (within free tier)
+
+Amadeus Flight Search:
+- Free tier: 2,000 calls/month
+- Estimated usage: 1,000 searches/month
+- Cost: $0 (within free tier)
+
+Total Monthly API Cost: $0 - $20
+
+7.2 Development Time
+-------------------
+
+Phase 1 (Rates DB): 1 week
+Phase 2 (Distance): 1 week
+Phase 3 (Flights): 1-2 weeks
+Phase 4 (Calculator): 1 week
+Phase 5 (PDF): 1 week
+
+Total: 5-6 weeks for complete automation
+
+7.3 Time Savings
+----------------
+
+Current Manual Process:
+- Search flights: 15-20 minutes
+- Check car rental: 10 minutes
+- Calculate distances: 5 minutes
+- Look up rates: 5 minutes
+- Calculate costs: 10-15 minutes
+- Fill form: 5 minutes
+Total per quotation: 50-60 minutes
+
+Automated Process:
+- Enter customer and date: 2 minutes
+- System calculates: 30 seconds
+- Review and adjust: 3 minutes
+Total per quotation: 5-6 minutes
+
+Time Saved: 45-55 minutes per quotation (90% reduction!)
+
+If you create 20 quotations per month:
+- Time saved: 15-18 hours/month
+- Equivalent to 2+ working days
+
+ROI: System pays for itself in 2-3 months
+
+===============================================================================
+8. NEXT STEPS
+===============================================================================
+
+IMMEDIATE ACTIONS (This Week):
+1. ☐ Download ARVVwV 2025 official rates PDF
+2. ☐ Create rates database table
+3. ☐ Import government rates data
+4. ☐ Add your company custom rates
+5. ☐ Sign up for Google Maps API (free)
+6. ☐ Sign up for Amadeus API (free tier)
+7. ☐ Test rate lookup function
+
+WEEK 1 MILESTONES:
+- Rates database populated
+- API keys obtained
+- Basic rate lookup working
+
+WEEK 2-3 MILESTONES:
+- Distance calculation working
+- Flight search functional
+- Cost formulas implemented
+
+WEEK 4-5 MILESTONES:
+- Complete automation engine
+- PDF generation
+- End-to-end test successful
+
+===============================================================================
+END OF AUTOMATION STRATEGY
+===============================================================================
+
+This automation strategy eliminates manual searching and uses official German
+government rates to ensure compliance and accuracy. The system will:
+
+✓ Automatically search flights
+✓ Calculate distances and routes
+✓ Apply official per diem rates
+✓ Compare travel options
+✓ Calculate all costs
+✓ Generate quotation PDF
+
+Time savings: 90% reduction in quotation preparation time
+Cost: Minimal (free tier APIs sufficient)
+Compliance: Uses official ARVVwV rates
+
+Ready to start implementing!

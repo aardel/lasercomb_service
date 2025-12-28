@@ -1,0 +1,567 @@
+===============================================================================
+TRAVEL COST CALCULATION WORKFLOW ANALYSIS
+Based on Handwritten Diagram
+===============================================================================
+
+OVERVIEW:
+The system handles three main scenarios for travel cost calculation with the
+goal of "most automation possible!"
+
+===============================================================================
+1. THREE MAIN TRAVEL SCENARIOS
+===============================================================================
+
+SCENARIO A: COMBINED
+--------------------
+Description: "Share travel costs regarding work volume (up to 8 customers?)"
+
+Use Case:
+- Multiple customers (up to 8) traveling together
+- Costs split based on work volume/percentage
+- Both flight and road travel costs are shared
+
+Travel Options:
+- Flight costs (shared)
+- Road costs (shared)
+
+Cost Splitting Logic:
+- Fair/based on work volume
+- Percentage-based allocation
+- Example: Customer A does 60% of work → pays 60% of travel costs
+
+Notes from diagram:
+- "Roundtrip must make most sense"
+- Consider route optimization
+- Fair split based on business volume
+
+Real-World Example:
+- 3 engineers traveling to visit 8 customer sites
+- Total flight cost: $3,000
+- Customer 1: 40% of work → pays $1,200
+- Customer 2: 35% of work → pays $1,050
+- Customer 3: 25% of work → pays $750
+
+SCENARIO B: 2ND OFFER (Pending Approval)
+----------------------------------------
+Description: "2nd offer while a quotation is approved, but not executed yet"
+
+Use Case:
+- Trip is planned but not yet confirmed
+- Quotation submitted to customer, awaiting approval
+- Travel costs are estimated but not final
+- Need to track both flight and road options
+
+Travel Options:
+- Flight (estimated)
+- Road (estimated)
+
+Status Indicators Needed:
+- "Quotation Pending"
+- "Awaiting Customer Approval"
+- "Not Yet Executed"
+
+System Requirements:
+- Track quotation status
+- Hold estimated costs
+- Update when approved/rejected
+- Convert to actual trip when approved
+
+Workflow:
+1. Engineer creates trip proposal
+2. System calculates estimated costs
+3. Quotation sent to customer
+4. Status: "Pending Approval"
+5. If approved → convert to actual trip
+6. If rejected → archive/cancel
+
+SCENARIO C: SINGLE
+------------------
+Description: "Single" customer trip with automated search
+
+Use Case:
+- One engineer visiting one customer
+- Fully automated cost calculation
+- System automatically searches for best options
+
+Travel Options:
+- Flight (automatically search the internet for best airport and travel 
+  duration and km)
+- Road (automatically calculate)
+
+Automation Requirements:
+- "Automatically search the internet for best airport"
+- Calculate "travel duration and km"
+- Compare flight vs. road costs
+- Consider engineer's starting point/location
+- "The start point may vary due to skill and location of each engineer"
+
+Key Intelligence:
+- Engineer location awareness
+- Skill-based routing (assign closest/most skilled engineer)
+- Multi-criteria optimization:
+  * Cost
+  * Duration
+  * Distance
+  * Airport proximity
+  * Engineer availability
+
+Example Decision Logic:
+"What if round trip could have been approached the other way around?"
+- Example: FRA (Frankfurt) - New Delhi vs FRA - Mumbai
+- System suggests most efficient route
+- Considers return journey optimization
+
+Notes on Route Optimization:
+- "6 costs have to be split fair based on working volume"
+- Round trips should be optimized for efficiency
+- Consider alternative routing options
+
+===============================================================================
+2. KEY WORKFLOW REQUIREMENTS
+===============================================================================
+
+2.1 Automation Goals
+-------------------
+Goal: "Most automation possible!"
+
+Automated Functions Required:
+1. Flight Search:
+   - Search internet for best flights
+   - Compare multiple airports
+   - Find best prices
+   - Calculate travel duration
+   - Identify optimal routing
+
+2. Airport Selection:
+   - Find nearest airport to engineer location
+   - Find nearest airport to customer location
+   - Consider alternative airports if cost-effective
+   - Factor in ground transportation time
+
+3. Distance Calculation:
+   - Calculate road distance (km)
+   - Estimate drive time
+   - Consider traffic patterns
+   - Compare with flight option
+
+4. Cost Comparison:
+   - Flight total cost (including ground transport)
+   - Road travel cost (fuel, tolls, time)
+   - Recommend most efficient option
+   - Show cost breakdown
+
+2.2 Engineer Assignment Logic
+-----------------------------
+Critical Factor: "The start point may vary due to skill and location of each 
+engineer"
+
+Considerations:
+- Engineer's current location (home base)
+- Engineer's skill set for the job
+- Engineer's availability
+- Distance to customer
+- Travel costs from engineer's location
+
+Decision Matrix:
+┌─────────────┬──────────┬────────┬──────────┬────────────┐
+│ Engineer    │ Location │ Skills │ Distance │ Est. Cost  │
+├─────────────┼──────────┼────────┼──────────┼────────────┤
+│ Engineer A  │ Munich   │ 95%    │ 450 km   │ €450       │
+│ Engineer B  │ Hamburg  │ 85%    │ 780 km   │ €680       │
+│ Engineer C  │ Berlin   │ 90%    │ 650 km   │ €580       │
+└─────────────┴──────────┴────────┴──────────┴────────────┘
+
+System recommends: Engineer A (best balance of skills, distance, cost)
+
+2.3 Route Optimization
+---------------------
+Quote from diagram: "Roundtrip must make most sense"
+
+Optimization Scenarios:
+
+Scenario 1: Multi-Stop Trip
+- Engineer visits Customer A → B → C → Return
+- System calculates optimal route
+- Minimizes total distance/cost
+- Considers appointment schedules
+
+Scenario 2: Alternative Routing
+- Direct: FRA → Delhi → FRA
+- Alternative: FRA → Mumbai → Delhi → FRA
+- System suggests most efficient option
+
+Scenario 3: Combined Trips
+- Multiple customers in same region
+- Share travel costs proportionally
+- Optimize route through all stops
+
+2.4 Cost Splitting Logic
+-----------------------
+For Combined Trips (Scenario A):
+
+Fair split based on "working volume"
+
+Example with 3 Customers:
+- Total travel cost: €1,500
+- Customer A: 50% of work → pays €750
+- Customer B: 30% of work → pays €450
+- Customer C: 20% of work → pays €300
+- Total: 100% → €1,500 ✓
+
+Work Volume Determination:
+- Time spent at customer site
+- Complexity of work
+- Value of service provided
+- Pre-agreed percentages
+- Invoice amount proportion
+
+===============================================================================
+3. TECHNICAL IMPLEMENTATION REQUIREMENTS
+===============================================================================
+
+3.1 Data Models Needed
+---------------------
+
+Trip Model:
+{
+  id: uuid,
+  trip_type: enum['combined', 'pending_approval', 'single'],
+  status: enum['draft', 'pending', 'approved', 'completed', 'cancelled'],
+  engineer_id: uuid,
+  customers: array[{
+    customer_id: uuid,
+    work_percentage: float,
+    cost_share: float,
+    visit_duration: int (hours),
+    visit_order: int
+  }],
+  travel_options: {
+    flight: {...},
+    road: {...}
+  },
+  selected_option: enum['flight', 'road'],
+  total_cost: float,
+  created_at: timestamp,
+  scheduled_date: date
+}
+
+Engineer Model:
+{
+  id: uuid,
+  name: string,
+  location: {
+    city: string,
+    address: string,
+    latitude: float,
+    longitude: float,
+    nearest_airport: string
+  },
+  skills: array[string],
+  skill_rating: object,
+  availability: array[date_ranges],
+  current_location: string (if on trip)
+}
+
+Flight Option Model:
+{
+  origin_airport: string,
+  destination_airport: string,
+  departure_time: timestamp,
+  arrival_time: timestamp,
+  duration_minutes: int,
+  price: float,
+  airline: string,
+  stops: int,
+  booking_url: string,
+  ground_transport_cost: float (to/from airports),
+  total_cost: float
+}
+
+Road Option Model:
+{
+  distance_km: float,
+  estimated_duration_minutes: int,
+  fuel_cost: float,
+  toll_cost: float,
+  parking_cost: float,
+  vehicle_type: string,
+  total_cost: float,
+  route: array[waypoints]
+}
+
+3.2 Algorithm Requirements
+--------------------------
+
+Algorithm 1: Engineer Assignment
+Input: customer_location, required_skills, date_range
+Process:
+  1. Get all engineers with required skills
+  2. Filter by availability
+  3. Calculate distance from each engineer to customer
+  4. Estimate travel cost for each engineer
+  5. Score based on: skills (40%) + distance (30%) + cost (30%)
+  6. Return ranked list
+Output: Recommended engineer with reasoning
+
+Algorithm 2: Route Optimization (Multi-Customer)
+Input: engineer_location, array[customer_locations], visit_durations
+Process:
+  1. Calculate all possible route permutations
+  2. For each route:
+     - Calculate total distance
+     - Calculate total duration (including visits)
+     - Estimate total cost
+  3. Consider time constraints (business hours, appointments)
+  4. Apply traveling salesman optimization
+  5. Return optimal route
+Output: Ordered list of customers with travel legs
+
+Algorithm 3: Cost Splitting
+Input: total_travel_cost, array[customers_with_work_percentage]
+Process:
+  1. Validate percentages sum to 100%
+  2. Calculate each customer's share
+  3. Handle rounding (ensure sum equals total)
+  4. Generate breakdown report
+Output: Cost allocation per customer
+
+Algorithm 4: Flight vs Road Decision
+Input: origin, destination, date, passenger_count
+Process:
+  1. Search flights (multiple airports if applicable)
+  2. Calculate road option
+  3. Compare on multiple criteria:
+     - Cost
+     - Time
+     - Convenience
+     - Environmental impact (optional)
+  4. Generate recommendation with reasoning
+Output: Recommended travel mode with comparison table
+
+Algorithm 5: Smart Flight Search
+Input: engineer_location, customer_location, date
+Process:
+  1. Identify nearest airports to engineer (within 100km)
+  2. Identify nearest airports to customer (within 100km)
+  3. For each airport pair:
+     - Search available flights
+     - Calculate ground transport costs
+     - Calculate total door-to-door time
+     - Calculate total cost
+  4. Rank by total cost and time
+  5. Consider alternative dates (flexible +/- 1 day)
+Output: Best flight options with total cost analysis
+
+3.3 User Interface Flows
+------------------------
+
+Flow 1: Create Combined Trip
+1. Select "Combined Trip"
+2. Select engineer (or auto-suggest)
+3. Add customers (up to 8)
+4. For each customer:
+   - Set work percentage
+   - Set visit order (optional, can optimize)
+5. System calculates:
+   - Optimal route
+   - Travel options (flight/road)
+   - Cost per customer
+6. Review and adjust
+7. Generate quotations
+8. Save trip
+
+Flow 2: Create Single Trip
+1. Select "Single Trip"
+2. Select customer
+3. System automatically:
+   - Suggests best engineer
+   - Searches flights
+   - Calculates road option
+   - Recommends travel mode
+4. Review recommendation
+5. Adjust if needed
+6. Approve and save
+
+Flow 3: Pending Approval Workflow
+1. Create trip (combined or single)
+2. Generate quotation
+3. Mark as "Pending Approval"
+4. System tracks status
+5. When approved:
+   - Status → "Approved"
+   - Trigger booking reminders
+6. When rejected:
+   - Status → "Cancelled"
+   - Archive for records
+
+===============================================================================
+4. INTEGRATION WITH CUSTOMER MANAGEMENT
+===============================================================================
+
+Connection to Earlier Discussion:
+
+Customer Data (from APplus) + Travel Planning:
+- Customer location → Used for distance calculation
+- Customer's nearest airport → Used for flight search
+- Work volume/value → Used for cost splitting
+- Historical trips → Used for pattern analysis
+
+Example Workflow:
+1. Customer added to system (manual or APplus import)
+2. Address geocoded → coordinates
+3. Nearest airport identified → stored
+4. Trip created for this customer
+5. System knows customer location, airport
+6. Automatically calculates travel options
+7. Engineer assigned based on location + skills
+
+===============================================================================
+5. BUSINESS RULES SUMMARY
+===============================================================================
+
+Rule 1: Cost Splitting Must Total 100%
+- System validates work percentages
+- Alerts if not equal to 100%
+- Suggests equal split as default
+
+Rule 2: Round Trip Optimization
+- System always considers return journey
+- May suggest alternative routing
+- Minimizes total distance/cost
+
+Rule 3: Engineer Assignment Priority
+Priority Order:
+1. Skills match (required skills met)
+2. Availability (can travel on required dates)
+3. Location (proximity to customer)
+4. Cost (lowest travel expense)
+
+Rule 4: Pending Trips Don't Block Resources
+- Pending approval trips are tentative
+- Engineers can be assigned to other trips
+- When approved, check availability again
+
+Rule 5: Alternative Routing Suggestions
+- If round trip can be optimized
+- System suggests alternatives
+- User can override with reasoning
+
+Rule 6: Maximum Combined Trip Size
+- Up to 8 customers per combined trip
+- Based on diagram note
+- System warns if attempting to add more
+
+===============================================================================
+6. RECOMMENDED DATABASE SCHEMA ADDITIONS
+===============================================================================
+
+Additional Tables Needed:
+
+trips
+- id, trip_type, status, engineer_id, trip_date, total_cost, selected_travel_mode
+
+trip_customers
+- trip_id, customer_id, work_percentage, cost_share, visit_order, duration_minutes
+
+trip_travel_options
+- trip_id, option_type (flight/road), details (JSONB), estimated_cost, selected
+
+engineers
+- id, name, email, phone, base_location, skills, skill_level, hourly_rate
+
+engineer_availability
+- engineer_id, start_date, end_date, is_available, reason
+
+trip_quotations
+- trip_id, quotation_number, sent_date, status, approved_date, customer_contact
+
+flight_searches
+- trip_id, search_date, origin_airport, destination_airport, results (JSONB)
+
+route_optimizations
+- trip_id, proposed_route (JSONB), total_distance, total_duration, total_cost
+
+===============================================================================
+7. KEY QUESTIONS TO CLARIFY
+===============================================================================
+
+1. Work Percentage Determination:
+   - How is work percentage decided?
+   - By time? By invoice value? By complexity?
+   - Who sets these percentages?
+
+2. Engineer Skills:
+   - How are skills defined and tracked?
+   - What skill levels are there?
+   - How specific are skill requirements?
+
+3. Pending Approval Timeline:
+   - How long can a trip stay "pending"?
+   - What happens if approval takes too long?
+   - Auto-cancel after X days?
+
+4. Cost Components:
+   - What costs are included in travel?
+   - Accommodation? Meals? Vehicle rental?
+   - Or only flight/road transportation?
+
+5. Booking Process:
+   - Does system actually book flights?
+   - Or just provide information for manual booking?
+   - Integration with booking platforms?
+
+6. Historical Data:
+   - Should system learn from past trips?
+   - Track actual vs estimated costs?
+   - Use for better future estimates?
+
+===============================================================================
+8. IMPLEMENTATION PRIORITY
+===============================================================================
+
+PHASE 1: Core Trip Management
+- Create trip (all 3 types)
+- Basic cost calculation
+- Manual travel option entry
+- Cost splitting logic
+
+PHASE 2: Engineer Management
+- Engineer profiles
+- Availability tracking
+- Skill matching
+- Assignment suggestions
+
+PHASE 3: Automation - Flight Search
+- Flight API integration
+- Multi-airport search
+- Cost comparison
+- Booking link generation
+
+PHASE 4: Automation - Route Optimization
+- Route calculation for combined trips
+- Traveling salesman optimization
+- Alternative route suggestions
+- Google Maps integration
+
+PHASE 5: Smart Recommendations
+- Engineer auto-assignment
+- Flight vs road recommendations
+- Route optimization
+- Cost prediction
+
+===============================================================================
+END OF WORKFLOW ANALYSIS
+===============================================================================
+
+This workflow requires a sophisticated system that combines:
+- Customer management (already discussed)
+- Engineer management (new)
+- Trip planning (new)
+- Cost calculation (new)
+- Route optimization (new)
+- Flight search automation (new)
+
+The three scenarios (Combined, Pending, Single) represent different business
+processes that all need to be supported by the system.
+
+Next steps: Define engineer management system and trip planning data models.

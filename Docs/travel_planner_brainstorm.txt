@@ -1,0 +1,692 @@
+===============================================================================
+TRAVEL PLANNER & COST CALCULATOR - BRAINSTORMING DOCUMENT
+===============================================================================
+Project Goal: Build a comprehensive travel planning system with real-time flight 
+pricing, location visualization, and flexible cost-sharing between multiple travelers.
+
+===============================================================================
+1. CORE FEATURES & REQUIREMENTS
+===============================================================================
+
+1.1 Customer Management
+-----------------------
+- Add/remove multiple customers to a trip
+- Store customer details:
+  * Name
+  * Origin location (address/city/airport code)
+  * Contact information
+  * Payment preferences
+  * Cost share percentage (adjustable)
+- Validate that cost percentages sum to 100%
+
+1.2 Location & Mapping
+---------------------
+- Capture customer locations (via address or coordinates)
+- Display departure points on interactive map
+- Show destination on map
+- Calculate distances from each origin to destination
+- Visual representation of all travelers' starting points
+
+1.3 Flight Price Analysis
+-------------------------
+- Search flights from multiple origins to single destination
+- Compare prices across different airlines
+- Filter by:
+  * Date ranges
+  * Number of stops
+  * Departure/arrival times
+  * Airline preferences
+- Track price changes over time
+- Set price alerts
+
+1.4 Cost Sharing & Calculation
+------------------------------
+- Flexible percentage-based cost splitting
+- Support unequal splits (30%/70%, 40%/60%, etc.)
+- Calculate individual costs for:
+  * Flights
+  * Accommodations
+  * Activities
+  * Transportation
+  * Meals/other expenses
+- Generate itemized breakdown per person
+- Track who has paid what
+- Calculate remaining balances
+
+===============================================================================
+2. TECHNICAL IMPLEMENTATION STRATEGIES
+===============================================================================
+
+2.1 Frontend Technologies
+-------------------------
+Option A: Web Application (React/Vue/Svelte)
+- Interactive UI with drag-and-drop
+- Responsive design for mobile/desktop
+- Real-time updates
+
+Option B: Desktop Application (Electron)
+- Offline capabilities
+- Native OS integration
+- Local data storage
+
+Option C: Progressive Web App (PWA)
+- Best of both worlds
+- Installable on devices
+- Offline-first approach
+
+2.2 Backend Architecture
+-----------------------
+Option A: Serverless (Firebase/Supabase/AWS Lambda)
+- Scalable
+- Pay-per-use
+- Managed infrastructure
+
+Option B: Traditional Server (Node.js/Python/Django)
+- Full control
+- Complex business logic
+- Database management
+
+Option C: Hybrid Approach
+- Static frontend
+- API calls to external services
+- Minimal backend for data persistence
+
+2.3 Mapping Solutions
+--------------------
+Option A: Google Maps API
+- Comprehensive features
+- Geocoding for addresses
+- Distance calculation
+- Route visualization
+- Cost: Pay-per-use
+
+Option B: Mapbox
+- Customizable styling
+- Good pricing for small-scale
+- Excellent developer experience
+
+Option C: OpenStreetMap + Leaflet
+- Free and open source
+- Self-hosted option
+- Community-driven data
+- Requires more development work
+
+2.4 Flight Price Data Sources
+-----------------------------
+Option A: Flight Search APIs
+* Amadeus API
+  - Comprehensive flight data
+  - Real-time pricing
+  - Historical price data
+  - Free tier available (limited calls)
+  
+* Skyscanner API
+  - Wide coverage
+  - Price comparison
+  - Partner network
+  
+* Google Flights API (QPX Express - deprecated, but alternatives exist)
+  - Accurate pricing
+  - Google's data quality
+
+Option B: Web Scraping (Legal Considerations Required)
+* Pros:
+  - Access to multiple sources
+  - No API costs
+* Cons:
+  - Against ToS of many sites
+  - Fragile (breaks with site updates)
+  - Legal gray area
+  - Rate limiting issues
+* NOT RECOMMENDED as primary solution
+
+Option C: Aggregator Services
+* Kiwi.com API
+  - Multi-city searches
+  - Complex routing
+  - Good documentation
+  
+* Tequila API
+  - Flexible search
+  - Price predictions
+  - Nomad searches (multi-destination)
+
+Option D: Hybrid Approach
+- Use APIs for initial search
+- Cache results locally
+- Allow manual price entry
+- Track prices over time in database
+
+===============================================================================
+3. DATA MODELS & STRUCTURE
+===============================================================================
+
+3.1 Customer/Traveler Schema
+----------------------------
+{
+  id: unique_identifier,
+  name: string,
+  email: string,
+  phone: string,
+  origin: {
+    address: string,
+    city: string,
+    country: string,
+    airport_code: string,
+    latitude: float,
+    longitude: float
+  },
+  cost_share_percentage: float (0-100),
+  payment_status: {
+    total_owed: float,
+    paid: float,
+    remaining: float
+  },
+  preferences: {
+    airline_preferences: array,
+    seating_class: string,
+    dietary_restrictions: array
+  }
+}
+
+3.2 Trip Schema
+--------------
+{
+  id: unique_identifier,
+  trip_name: string,
+  destination: {
+    name: string,
+    city: string,
+    country: string,
+    airport_code: string,
+    latitude: float,
+    longitude: float
+  },
+  dates: {
+    departure_date: date,
+    return_date: date,
+    flexible: boolean,
+    flexibility_days: int
+  },
+  travelers: array[customer_ids],
+  costs: {
+    flights: {
+      total: float,
+      per_person: object {customer_id: amount}
+    },
+    accommodation: {
+      total: float,
+      per_person: object
+    },
+    activities: array[expense_items],
+    other: array[expense_items]
+  },
+  status: string (planning/booked/completed),
+  created_at: timestamp,
+  updated_at: timestamp
+}
+
+3.3 Flight Search Result Schema
+-------------------------------
+{
+  search_id: unique_identifier,
+  origin_airport: string,
+  destination_airport: string,
+  search_date: timestamp,
+  flights: array[
+    {
+      flight_id: string,
+      airline: string,
+      flight_number: string,
+      departure: {
+        time: timestamp,
+        airport: string
+      },
+      arrival: {
+        time: timestamp,
+        airport: string
+      },
+      duration: int (minutes),
+      stops: int,
+      price: {
+        amount: float,
+        currency: string
+      },
+      booking_class: string,
+      seats_available: int,
+      url: string (booking link)
+    }
+  ]
+}
+
+3.4 Expense Item Schema
+----------------------
+{
+  id: unique_identifier,
+  category: string (accommodation/activity/meal/transport/other),
+  description: string,
+  total_amount: float,
+  currency: string,
+  split_type: string (equal/percentage/custom),
+  splits: array[
+    {
+      customer_id: string,
+      percentage: float,
+      amount: float,
+      paid: boolean
+    }
+  ],
+  date: date,
+  notes: string
+}
+
+===============================================================================
+4. KEY FEATURES IMPLEMENTATION DETAILS
+===============================================================================
+
+4.1 Cost Splitting Algorithm
+----------------------------
+Function: calculateSplits(totalAmount, travelers)
+
+Input:
+- totalAmount: float
+- travelers: array of {id, name, percentage}
+
+Process:
+1. Validate percentages sum to 100
+2. For each traveler:
+   amount = totalAmount * (percentage / 100)
+3. Handle rounding (ensure sum matches total exactly)
+4. Return array of {traveler_id, amount}
+
+Edge Cases:
+- Rounding errors (use banker's rounding)
+- Percentages not summing to 100 (error handling)
+- Negative percentages (validation)
+- Zero percentages (exclude from calculations)
+
+4.2 Multi-Origin Flight Search
+------------------------------
+Process Flow:
+1. Collect all traveler origin airports
+2. For each origin:
+   - Query flight API with destination
+   - Apply date filters
+   - Store results with origin reference
+3. Aggregate results by origin
+4. Display in comparison view
+5. Allow selection of specific flights per person
+6. Calculate total cost
+7. Apply cost-sharing percentages
+
+Optimization:
+- Parallel API calls for multiple origins
+- Cache results for same origin/destination/date
+- Implement rate limiting for API calls
+- Batch requests where API supports it
+
+4.3 Location Visualization
+-------------------------
+Map Features:
+- Markers for each traveler's origin (color-coded)
+- Marker for destination (distinct icon)
+- Lines connecting origins to destination
+- Distance labels on connection lines
+- Cluster markers if many travelers from same area
+- Interactive tooltips with traveler info
+
+Implementation:
+1. Geocode all addresses to coordinates
+2. Initialize map centered on average of all points
+3. Add markers with custom icons
+4. Draw connecting lines (polylines)
+5. Calculate distances using Haversine formula or API
+6. Add zoom/pan controls
+7. Mobile-responsive touch gestures
+
+4.4 Price Tracking & Alerts
+---------------------------
+Features:
+- Save search criteria
+- Periodic price checks (daily/weekly)
+- Price history graph
+- Email/SMS notifications when prices drop
+- Predicted best time to book
+
+Implementation:
+1. Store search parameters in database
+2. Scheduled job to re-run searches
+3. Compare new prices with historical data
+4. Trigger alerts based on thresholds
+5. Use price prediction algorithms (if API provides)
+6. Display price trends visually
+
+===============================================================================
+5. USER INTERFACE MOCKUP STRUCTURE
+===============================================================================
+
+5.1 Main Dashboard
+-----------------
+- Trip summary cards
+- Quick add traveler button
+- Overview of total costs
+- Upcoming trips calendar
+- Recent price alerts
+
+5.2 Trip Planning View
+---------------------
+Left Panel:
+- Traveler list with cost percentages
+- Add/remove traveler buttons
+- Percentage adjustment sliders
+- Total percentage indicator
+
+Center Panel:
+- Destination search
+- Date picker (with flexibility options)
+- Flight search results grid
+- Price comparison charts
+- Map view toggle
+
+Right Panel:
+- Cost breakdown
+- Per-person costs
+- Payment status
+- Notes section
+
+5.3 Flight Search Results
+-------------------------
+- Grid/list view toggle
+- Sort options (price/duration/stops/airline)
+- Filter sidebar:
+  * Price range
+  * Departure time
+  * Number of stops
+  * Airlines
+  * Duration
+- Select flight per traveler
+- Compare selected flights
+
+5.4 Cost Calculator
+-------------------
+- Expense category tabs
+- Add expense form
+- Split adjustment interface
+- Visual percentage distribution (pie chart)
+- Payment tracking checkboxes
+- Export to PDF/CSV
+
+5.5 Map View
+-----------
+- Full-screen map option
+- Filter travelers
+- Distance measurements
+- Route optimization (if multiple destinations)
+- Legend for markers
+
+===============================================================================
+6. IMPLEMENTATION PHASES
+===============================================================================
+
+Phase 1: Core Foundation (MVP)
+------------------------------
+- Basic customer management (add/remove/edit)
+- Simple destination selection
+- Manual flight price entry
+- Basic cost splitting (equal only)
+- Simple cost summary
+
+Phase 2: Location Features
+--------------------------
+- Address geocoding
+- Map integration
+- Visual location display
+- Distance calculations
+
+Phase 3: Flight Integration
+---------------------------
+- Flight API integration
+- Real-time price search
+- Multi-origin support
+- Price comparison views
+
+Phase 4: Advanced Cost Management
+---------------------------------
+- Percentage-based splitting
+- Multiple expense categories
+- Payment tracking
+- Itemized breakdowns
+
+Phase 5: Enhanced Features
+--------------------------
+- Price tracking and alerts
+- Historical price data
+- Price prediction
+- Trip templates
+- Export/sharing capabilities
+
+Phase 6: Optimization & Polish
+------------------------------
+- Performance optimization
+- Mobile responsiveness
+- Offline capabilities
+- User authentication
+- Data backup/sync
+
+===============================================================================
+7. TECHNICAL CHALLENGES & SOLUTIONS
+===============================================================================
+
+Challenge 1: API Rate Limits
+----------------------------
+Problem: Flight APIs have request limits
+Solutions:
+- Implement caching layer
+- Use Redis for frequently searched routes
+- Batch requests where possible
+- Implement request queuing
+- Show cached results with timestamps
+- Offer manual refresh option
+
+Challenge 2: Real-time Price Changes
+------------------------------------
+Problem: Prices change between search and booking
+Solutions:
+- Display price validity timestamp
+- Add disclaimer about price fluctuations
+- Implement "check current price" function
+- Show price trends/history
+- Set reasonable cache expiration (5-15 minutes)
+
+Challenge 3: Cost Rounding
+--------------------------
+Problem: Percentage splits may not divide evenly
+Solutions:
+- Use decimal precision (2 places minimum)
+- Assign rounding difference to one person (largest share)
+- Allow manual adjustment of final amounts
+- Display exact calculations transparently
+- Implement banker's rounding
+
+Challenge 4: Multi-Currency Support
+-----------------------------------
+Problem: Different origins may have different currencies
+Solutions:
+- Integrate currency conversion API
+- Store original currency + converted amount
+- Update exchange rates regularly
+- Display both original and converted prices
+- Allow base currency selection
+
+Challenge 5: Scalability
+------------------------
+Problem: Multiple simultaneous searches
+Solutions:
+- Implement job queuing (Bull/RabbitMQ)
+- Use worker processes
+- Load balancing
+- Database indexing
+- Caching strategy
+- CDN for static assets
+
+Challenge 6: Data Privacy
+-------------------------
+Problem: Handling personal travel information
+Solutions:
+- Encrypt sensitive data
+- Implement user authentication
+- Role-based access control
+- GDPR compliance
+- Data retention policies
+- Secure API communication (HTTPS)
+
+===============================================================================
+8. MONETIZATION STRATEGIES (Optional)
+===============================================================================
+
+Free Tier:
+- Basic features
+- Limited API calls per month
+- Up to 5 travelers per trip
+- 3 active trips
+
+Premium Features:
+- Unlimited API calls
+- Price tracking and alerts
+- Historical price data
+- Unlimited travelers and trips
+- Export features
+- Priority support
+- White-label options
+
+Affiliate Model:
+- Booking links with referral codes
+- Commission on completed bookings
+- Partner with airlines/hotels
+- Display sponsored options
+
+===============================================================================
+9. TESTING STRATEGY
+===============================================================================
+
+Unit Tests:
+- Cost calculation functions
+- Percentage validation
+- Data model validation
+- Currency conversion
+- Distance calculations
+
+Integration Tests:
+- API integrations
+- Database operations
+- Map functionality
+- User workflows
+
+End-to-End Tests:
+- Complete trip planning flow
+- Payment tracking
+- Multi-user scenarios
+
+Performance Tests:
+- API response times
+- Database query optimization
+- Load testing
+- Concurrent user handling
+
+===============================================================================
+10. DEPLOYMENT CONSIDERATIONS
+===============================================================================
+
+Hosting Options:
+- Vercel/Netlify (frontend)
+- Railway/Render/Heroku (backend)
+- AWS/Google Cloud/Azure (full stack)
+
+Database:
+- PostgreSQL (relational data)
+- MongoDB (flexible schema)
+- Firebase Firestore (real-time)
+
+Monitoring:
+- Error tracking (Sentry)
+- Analytics (Google Analytics/Mixpanel)
+- Performance monitoring
+- API usage tracking
+
+Security:
+- SSL certificates
+- API key management
+- Rate limiting
+- Input validation
+- SQL injection prevention
+- XSS protection
+
+===============================================================================
+11. NEXT STEPS & ACTION ITEMS
+===============================================================================
+
+Immediate Actions:
+1. Choose technology stack
+2. Set up development environment
+3. Create database schema
+4. Research and select flight API
+5. Design basic UI mockups
+6. Set up version control (Git)
+
+Short-term Goals:
+1. Build MVP with manual data entry
+2. Implement basic cost splitting
+3. Add simple mapping feature
+4. Create user authentication
+
+Medium-term Goals:
+1. Integrate flight API
+2. Add price tracking
+3. Implement payment tracking
+4. Build mobile-responsive design
+
+Long-term Vision:
+1. Machine learning for price prediction
+2. Social features (share trips)
+3. Integration with booking platforms
+4. Mobile native apps
+5. Group chat for trip coordination
+
+===============================================================================
+12. RESOURCES & REFERENCES
+===============================================================================
+
+Flight APIs:
+- Amadeus: https://developers.amadeus.com/
+- Kiwi.com: https://docs.kiwi.com/
+- Skyscanner: https://developers.skyscanner.net/
+
+Mapping:
+- Google Maps: https://developers.google.com/maps
+- Mapbox: https://www.mapbox.com/
+- Leaflet: https://leafletjs.com/
+
+Frameworks:
+- React: https://react.dev/
+- Vue: https://vuejs.org/
+- Svelte: https://svelte.dev/
+
+Backend:
+- Node.js: https://nodejs.org/
+- Express: https://expressjs.com/
+- Django: https://www.djangoproject.com/
+
+Databases:
+- PostgreSQL: https://www.postgresql.org/
+- MongoDB: https://www.mongodb.com/
+- Supabase: https://supabase.com/
+
+===============================================================================
+END OF BRAINSTORMING DOCUMENT
+===============================================================================
+
+This document serves as a comprehensive starting point for building a travel
+planner with cost-sharing capabilities. Adjust and expand based on specific
+requirements and constraints.
+
+Last Updated: December 2024
