@@ -2151,6 +2151,335 @@ const SettingsPage = () => {
                                         </div>
                                     </div>
 
+                                    {/* Flight Search Provider Selection */}
+                                    <div style={{ marginBottom: '32px' }}>
+                                        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                                            ✈️ Flight Search Provider
+                                        </h3>
+                                        <div style={{ padding: '16px', border: '2px solid #3b82f6', borderRadius: '8px', background: '#eff6ff' }}>
+                                            {(() => {
+                                                const currentFlightProvider = settings?.flightSearchProvider || 'serper';
+
+                                                const handleFlightProviderChange = (provider) => {
+                                                    const updatedSettings = {
+                                                        ...settings,
+                                                        flightSearchProvider: provider
+                                                    };
+                                                    setSettings(updatedSettings);
+                                                    saveSettings(updatedSettings);
+                                                    setSaved(true);
+                                                    setTimeout(() => setSaved(false), 2000);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                            {[
+                                                                { value: 'serper', label: '🆓 Serper (Recommended)', desc: 'FREE 2,500 queries, then $1/1,000 (15x cheaper than SerpAPI)', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'amadeus', label: '🆓 Amadeus', desc: 'FREE 2,000 requests/month - official airline data', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'groq', label: '🆓 Groq AI', desc: 'FREE 14,400/day - AI-powered estimates (less accurate)', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'serpapi', label: '💳 SerpAPI (Legacy)', desc: 'EXPENSIVE - $75/month for 5,000 searches - use only as backup', badge: 'Paid', badgeColor: '#ef4444' }
+                                                            ].map((option) => (
+                                                                <label
+                                                                    key={option.value}
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '14px',
+                                                                        border: currentFlightProvider === option.value ? '2px solid #3b82f6' : '1px solid #cbd5e1',
+                                                                        borderRadius: '8px',
+                                                                        background: currentFlightProvider === option.value ? '#fff' : '#f8fafc',
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all 0.2s'
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#3b82f6'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = currentFlightProvider === option.value ? '#3b82f6' : '#cbd5e1'}
+                                                                >
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="flightSearchProvider"
+                                                                        value={option.value}
+                                                                        checked={currentFlightProvider === option.value}
+                                                                        onChange={() => handleFlightProviderChange(option.value)}
+                                                                        style={{ width: '18px', height: '18px', marginRight: '12px', cursor: 'pointer' }}
+                                                                    />
+                                                                    <div style={{ flex: 1 }}>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                                            <strong style={{ fontSize: '15px', color: '#1e293b' }}>{option.label}</strong>
+                                                                            <span style={{
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '4px',
+                                                                                fontSize: '11px',
+                                                                                fontWeight: '600',
+                                                                                color: '#fff',
+                                                                                background: option.badgeColor
+                                                                            }}>
+                                                                                {option.badge}
+                                                                            </span>
+                                                                        </div>
+                                                                        <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>{option.desc}</p>
+                                                                    </div>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+
+                                                        <div style={{ marginTop: '16px', padding: '12px', background: '#dbeafe', borderRadius: '6px', fontSize: '12px', color: '#1e40af' }}>
+                                                            <strong>💰 Cost Savings:</strong> Using Serper instead of SerpAPI saves $65-75/month (87-100% reduction).
+                                                            <br />
+                                                            <strong>Fallback:</strong> System automatically falls back to Amadeus → Groq if primary provider fails.
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+
+                                    {/* Hotel Search Provider Selection */}
+                                    <div style={{ marginBottom: '32px' }}>
+                                        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                                            🏨 Hotel Search Provider
+                                        </h3>
+                                        <div style={{ padding: '16px', border: '2px solid #8b5cf6', borderRadius: '8px', background: '#f5f3ff' }}>
+                                            {(() => {
+                                                const currentHotelProvider = settings?.hotelSearchProvider || 'xotelo';
+
+                                                const handleHotelProviderChange = (provider) => {
+                                                    const updatedSettings = {
+                                                        ...settings,
+                                                        hotelSearchProvider: provider
+                                                                    };
+                                                    setSettings(updatedSettings);
+                                                    saveSettings(updatedSettings);
+                                                    setSaved(true);
+                                                    setTimeout(() => setSaved(false), 2000);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                            {[
+                                                                { value: 'xotelo', label: '🆓 Xotelo (Recommended)', desc: 'FREE unlimited - aggregates Hotels.com, Expedia, Booking.com, Agoda', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'amadeus', label: '🆓 Amadeus', desc: 'FREE 2,000 requests/month - official hotel booking data', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'google', label: '💳 Google Places', desc: 'PAID - use only as backup (no pricing data)', badge: 'Paid', badgeColor: '#ef4444' }
+                                                            ].map((option) => (
+                                                                <label
+                                                                    key={option.value}
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '14px',
+                                                                        border: currentHotelProvider === option.value ? '2px solid #8b5cf6' : '1px solid #cbd5e1',
+                                                                        borderRadius: '8px',
+                                                                        background: currentHotelProvider === option.value ? '#fff' : '#f8fafc',
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all 0.2s'
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#8b5cf6'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = currentHotelProvider === option.value ? '#8b5cf6' : '#cbd5e1'}
+                                                                >
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="hotelSearchProvider"
+                                                                        value={option.value}
+                                                                        checked={currentHotelProvider === option.value}
+                                                                        onChange={() => handleHotelProviderChange(option.value)}
+                                                                        style={{ width: '18px', height: '18px', marginRight: '12px', cursor: 'pointer' }}
+                                                                    />
+                                                                    <div style={{ flex: 1 }}>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                                            <strong style={{ fontSize: '15px', color: '#1e293b' }}>{option.label}</strong>
+                                                                            <span style={{
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '4px',
+                                                                                fontSize: '11px',
+                                                                                fontWeight: '600',
+                                                                                color: '#fff',
+                                                                                background: option.badgeColor
+                                                                            }}>
+                                                                                {option.badge}
+                                                                            </span>
+                                                                        </div>
+                                                                        <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>{option.desc}</p>
+                                                                    </div>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+
+                                                        <div style={{ marginTop: '16px', padding: '12px', background: '#ede9fe', borderRadius: '6px', fontSize: '12px', color: '#5b21b6' }}>
+                                                            <strong>💰 Cost Savings:</strong> Using Xotelo avoids $30-50/month in paid hotel API costs (100% free).
+                                                            <br />
+                                                            <strong>Fallback:</strong> System automatically falls back to Amadeus if Xotelo fails.
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+
+                                    {/* Car Rental Provider Selection */}
+                                    <div style={{ marginBottom: '32px' }}>
+                                        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                                            🚗 Car Rental Provider
+                                        </h3>
+                                        <div style={{ padding: '16px', border: '2px solid #f59e0b', borderRadius: '8px', background: '#fffbeb' }}>
+                                            {(() => {
+                                                const currentCarProvider = settings?.carRentalProvider || 'market';
+
+                                                const handleCarProviderChange = (provider) => {
+                                                    const updatedSettings = {
+                                                        ...settings,
+                                                        carRentalProvider: provider
+                                                    };
+                                                    setSettings(updatedSettings);
+                                                    saveSettings(updatedSettings);
+                                                    setSaved(true);
+                                                    setTimeout(() => setSaved(false), 2000);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                            {[
+                                                                { value: 'market', label: '🆓 Market Prices (Recommended)', desc: 'FREE - no API needed, uses researched market rates', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'rentalcars', label: '🆓 Rentalcars.com Partnership', desc: 'FREE - 60,000 locations, 800+ companies', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'rapidapi', label: '🆓 RapidAPI', desc: 'FREE 500 requests/month - use as backup', badge: 'FREE', badgeColor: '#10b981' }
+                                                            ].map((option) => (
+                                                                <label
+                                                                    key={option.value}
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '14px',
+                                                                        border: currentCarProvider === option.value ? '2px solid #f59e0b' : '1px solid #cbd5e1',
+                                                                        borderRadius: '8px',
+                                                                        background: currentCarProvider === option.value ? '#fff' : '#f8fafc',
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all 0.2s'
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#f59e0b'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = currentCarProvider === option.value ? '#f59e0b' : '#cbd5e1'}
+                                                                >
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="carRentalProvider"
+                                                                        value={option.value}
+                                                                        checked={currentCarProvider === option.value}
+                                                                        onChange={() => handleCarProviderChange(option.value)}
+                                                                        style={{ width: '18px', height: '18px', marginRight: '12px', cursor: 'pointer' }}
+                                                                    />
+                                                                    <div style={{ flex: 1 }}>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                                            <strong style={{ fontSize: '15px', color: '#1e293b' }}>{option.label}</strong>
+                                                                            <span style={{
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '4px',
+                                                                                fontSize: '11px',
+                                                                                fontWeight: '600',
+                                                                                color: '#fff',
+                                                                                background: option.badgeColor
+                                                                            }}>
+                                                                                {option.badge}
+                                                                            </span>
+                                                                        </div>
+                                                                        <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>{option.desc}</p>
+                                                                    </div>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+
+                                                        <div style={{ marginTop: '16px', padding: '12px', background: '#fef3c7', borderRadius: '6px', fontSize: '12px', color: '#92400e' }}>
+                                                            <strong>💰 Cost Savings:</strong> Using market prices avoids $20-40/month in API costs (100% free, no API required).
+                                                            <br />
+                                                            <strong>Fallback:</strong> Market prices always available as ultimate fallback.
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+
+                                    {/* Toll Calculation Provider Selection */}
+                                    <div style={{ marginBottom: '32px' }}>
+                                        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                                            🛣️ Toll Calculation Provider
+                                        </h3>
+                                        <div style={{ padding: '16px', border: '2px solid #06b6d4', borderRadius: '8px', background: '#ecfeff' }}>
+                                            {(() => {
+                                                const currentTollProvider = settings?.tollCalculationProvider || 'here';
+
+                                                const handleTollProviderChange = (provider) => {
+                                                    const updatedSettings = {
+                                                        ...settings,
+                                                        tollCalculationProvider: provider
+                                                    };
+                                                    setSettings(updatedSettings);
+                                                    saveSettings(updatedSettings);
+                                                    setSaved(true);
+                                                    setTimeout(() => setSaved(false), 2000);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                            {[
+                                                                { value: 'here', label: '🆓 HERE Maps (Recommended)', desc: 'FREE 250,000 requests/month - includes toll data in routing', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'estimate', label: '🆓 Simple Estimate', desc: 'FREE - basic calculation (~€0.15/km) - use as backup', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'tollguru', label: '💳 TollGuru', desc: 'EXPENSIVE - $80/month - use only as last resort', badge: 'Paid', badgeColor: '#ef4444' }
+                                                            ].map((option) => (
+                                                                <label
+                                                                    key={option.value}
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '14px',
+                                                                        border: currentTollProvider === option.value ? '2px solid #06b6d4' : '1px solid #cbd5e1',
+                                                                        borderRadius: '8px',
+                                                                        background: currentTollProvider === option.value ? '#fff' : '#f8fafc',
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all 0.2s'
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#06b6d4'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = currentTollProvider === option.value ? '#06b6d4' : '#cbd5e1'}
+                                                                >
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="tollCalculationProvider"
+                                                                        value={option.value}
+                                                                        checked={currentTollProvider === option.value}
+                                                                        onChange={() => handleTollProviderChange(option.value)}
+                                                                        style={{ width: '18px', height: '18px', marginRight: '12px', cursor: 'pointer' }}
+                                                                    />
+                                                                    <div style={{ flex: 1 }}>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                                            <strong style={{ fontSize: '15px', color: '#1e293b' }}>{option.label}</strong>
+                                                                            <span style={{
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '4px',
+                                                                                fontSize: '11px',
+                                                                                fontWeight: '600',
+                                                                                color: '#fff',
+                                                                                background: option.badgeColor
+                                                                            }}>
+                                                                                {option.badge}
+                                                                            </span>
+                                                                        </div>
+                                                                        <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>{option.desc}</p>
+                                                                    </div>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+
+                                                        <div style={{ marginTop: '16px', padding: '12px', background: '#cffafe', borderRadius: '6px', fontSize: '12px', color: '#164e63' }}>
+                                                            <strong>💰 Cost Savings:</strong> Using HERE Maps instead of TollGuru saves $80/month (100% reduction).
+                                                            <br />
+                                                            <strong>Fallback:</strong> System automatically falls back to estimate if HERE Maps fails.
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+
                                     {renderApiGroup('🚗 Car Rental APIs', apiSettings.carRentalApis, 'carRentalApis', false)}
                                     {renderApiGroup('🏨 Hotel APIs', apiSettings.hotelApis, 'hotelApis', false)}
                                     {renderApiGroup('🛣️ Toll Calculation APIs', apiSettings.tollApis, 'tollApis', true)}

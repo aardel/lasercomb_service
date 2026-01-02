@@ -184,7 +184,13 @@ const defaultSettings = {
     },
 
     // Map Rendering Provider
-    mapRenderingProvider: 'leaflet' // Default to free Leaflet (OpenStreetMap). Options: 'leaflet' (FREE), 'google' (PAID)
+    mapRenderingProvider: 'leaflet', // Default to free Leaflet (OpenStreetMap). Options: 'leaflet' (FREE), 'google' (PAID)
+
+    // Provider Preferences (Multi-Provider API System)
+    flightSearchProvider: 'serper', // Default to Serper (FREE 2,500, then $1/1k). Options: 'serper', 'amadeus', 'groq', 'serpapi'
+    hotelSearchProvider: 'xotelo', // Default to Xotelo (FREE unlimited). Options: 'xotelo', 'amadeus', 'google'
+    carRentalProvider: 'market', // Default to market prices (FREE, no API). Options: 'market', 'rentalcars', 'rapidapi'
+    tollCalculationProvider: 'here' // Default to HERE Maps (FREE 250k/mo). Options: 'here', 'estimate', 'tollguru'
 };
 
 // Get all settings (non-technician settings from localStorage)

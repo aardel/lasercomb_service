@@ -88,6 +88,14 @@ app.use('/api/hotels', hotelRoutes);
 const flightRoutes = require('./routes/flight.routes');
 app.use('/api/flights', flightRoutes);
 
+// Car rental routes
+const carRentalRoutes = require('./routes/car-rental.routes');
+app.use('/api/car-rentals', carRentalRoutes);
+
+// Toll calculation routes
+const tollRoutes = require('./routes/toll.routes');
+app.use('/api/tolls', tollRoutes);
+
 // Distance routes
 const distanceRoutes = require('./routes/distance.routes');
 app.use('/api/distance', distanceRoutes);
