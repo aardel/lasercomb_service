@@ -317,40 +317,71 @@ export const useFlightSearch = ({
         };
       }
 
-      // Search flights
-      const response = await flightsAPI.search({
+      // Get flight search provider preference (default to Serper)
+      const flightProvider = settings?.flightSearchProvider || 'serper';
+      const providers = [flightProvider]; // Use selected provider first
+
+      // Add fallback providers
+      if (flightProvider !== 'serper') providers.push('serper');
+      if (flightProvider !== 'amadeus') providers.push('amadeus');
+      if (flightProvider !== 'groq') providers.push('groq');
+
+      logger.debug('FlightSearch', `Using provider: ${flightProvider}, fallbacks: ${providers.join(', ')}`);
+
+      // Search flights using new provider system
+      const response = await flightsAPI.searchWithProvider({
         origin: searchOrigin,
         destination: searchDestination,
         departureDate: returnOnly ? returnDateStr : tripDate,
         returnDate: searchReturnDate,
-        limit: FLIGHT_SEARCH_LIMITS.MAX_RESULTS,
-        apiPreferences: flightApiPreferences
+        passengers: 1,
+        maxResults: FLIGHT_SEARCH_LIMITS.MAX_RESULTS,
+        providers: providers
       });
 
       logger.debug('FlightSearch', `Flights response for ${customerId}:`, response.data);
-      logger.debug('FlightSearch', `Options count: ${response.data.options?.length}, Rental cars count: ${response.data.rental_car_options?.length}`);
+
+      // New provider format: response.data.flights instead of response.data.options
+      const flightOptions = response.data.flights || response.data.options || [];
+      logger.debug('FlightSearch', `Provider: ${response.data.provider}, Flights count: ${flightOptions.length}`);
+
+      // Convert provider response to old format for compatibility
+      const formattedResponse = {
+        success: response.data.success,
+        options: flightOptions,
+        provider: response.data.provider,
+        source: response.data.provider,
+        origin_airport: {
+          code: searchOrigin.code,
+          lat: searchOrigin.lat,
+          lng: searchOrigin.lng
+        },
+        destination_airport: {
+          code: searchDestination.code,
+          lat: searchDestination.lat,
+          lng: searchDestination.lng
+        },
+        rental_car_options: [] // Provider endpoint doesn't return rental cars yet
+      };
 
       // Update API status
-      updateApiStatusFromResponse(response.data);
+      updateApiStatusFromResponse(formattedResponse);
 
       // Update state
-      setFlights(prev => ({ ...prev, [customerId]: response.data }));
-      setRentalCars(prev => ({ ...prev, [customerId]: response.data.rental_car_options || [] }));
+      setFlights(prev => ({ ...prev, [customerId]: formattedResponse }));
+      setRentalCars(prev => ({ ...prev, [customerId]: [] })); // TODO: Add rental car provider integration
 
       // Update airport options
-      updateAirportOptionsFromResponse(customerId, response.data);
+      updateAirportOptionsFromResponse(customerId, formattedResponse);
 
-      // Auto-select first flight and rental car (if not AI-selected)
-      if (response.data.success && response.data.options && response.data.options.length > 0) {
+      // Auto-select first flight (if not AI-selected)
+      if (formattedResponse.success && flightOptions.length > 0) {
         const currentFlightIsAI = selectedFlight?.source === 'ai_recommendation';
         if (!currentFlightIsAI) {
-          setSelectedFlight(response.data.options[0]);
+          setSelectedFlight(flightOptions[0]);
         } else {
           logger.debug('FlightSearch', 'Preserving AI-selected flight, not overwriting with search results');
         }
-      }
-      if (response.data.rental_car_options && response.data.rental_car_options.length > 0) {
-        setSelectedRentalCar(response.data.rental_car_options[0]);
       }
 
       return response.data;

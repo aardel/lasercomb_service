@@ -190,7 +190,8 @@ const defaultSettings = {
     flightSearchProvider: 'serper', // Default to Serper (FREE 2,500, then $1/1k). Options: 'serper', 'amadeus', 'groq', 'serpapi'
     hotelSearchProvider: 'xotelo', // Default to Xotelo (FREE unlimited). Options: 'xotelo', 'amadeus', 'google'
     carRentalProvider: 'market', // Default to market prices (FREE, no API). Options: 'market', 'rentalcars', 'rapidapi'
-    tollCalculationProvider: 'here' // Default to HERE Maps (FREE 250k/mo). Options: 'here', 'estimate', 'tollguru'
+    tollCalculationProvider: 'here', // Default to HERE Maps (FREE 250k/mo). Options: 'here', 'estimate', 'tollguru'
+    airportSearchProvider: 'amadeus' // Default to Amadeus (FREE 2k/mo). Options: 'amadeus', 'google'
 };
 
 // Get all settings (non-technician settings from localStorage)

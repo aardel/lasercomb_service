@@ -1972,8 +1972,6 @@ const SettingsPage = () => {
                             
                             return (
                                 <>
-                                    {renderApiGroup('✈️ Flight Search APIs', apiSettings.flightApis, 'flightApis', true)}
-
                                     {/* Mapping Provider Selection */}
                                     <div style={{ marginBottom: '32px' }}>
                                         <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
@@ -2480,19 +2478,99 @@ const SettingsPage = () => {
                                         </div>
                                     </div>
 
-                                    {renderApiGroup('🚗 Car Rental APIs', apiSettings.carRentalApis, 'carRentalApis', false)}
-                                    {renderApiGroup('🏨 Hotel APIs', apiSettings.hotelApis, 'hotelApis', false)}
-                                    {renderApiGroup('🛣️ Toll Calculation APIs', apiSettings.tollApis, 'tollApis', true)}
-                                    {renderApiGroup('🛫 Airport Search APIs', apiSettings.airportApis, 'airportApis', true)}
+                                    {/* Airport Search Provider */}
+                                    <div style={{ marginBottom: '32px' }}>
+                                        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                                            🛫 Airport Search Provider
+                                        </h3>
+                                        <div style={{ padding: '16px', border: '2px solid #10b981', borderRadius: '8px', background: '#f0fdf4' }}>
+                                            {(() => {
+                                                const currentAirportProvider = settings?.airportSearchProvider || 'amadeus';
+
+                                                const handleAirportProviderChange = (provider) => {
+                                                    const updatedSettings = {
+                                                        ...settings,
+                                                        airportSearchProvider: provider
+                                                    };
+                                                    setSettings(updatedSettings);
+                                                    saveSettings(updatedSettings);
+                                                    setSaved(true);
+                                                    setTimeout(() => setSaved(false), 2000);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                            {[
+                                                                { value: 'amadeus', label: '🆓 Amadeus Airport Search (Recommended)', desc: 'FREE 2,000 requests/month - comprehensive airport database', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'google', label: '💳 Google Places', desc: 'PAID - use as backup for airport autocomplete', badge: 'Paid', badgeColor: '#ef4444' }
+                                                            ].map((option) => (
+                                                                <label
+                                                                    key={option.value}
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '14px',
+                                                                        border: currentAirportProvider === option.value ? '2px solid #10b981' : '1px solid #cbd5e1',
+                                                                        borderRadius: '8px',
+                                                                        background: currentAirportProvider === option.value ? '#fff' : '#f8fafc',
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all 0.2s'
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#10b981'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = currentAirportProvider === option.value ? '#10b981' : '#cbd5e1'}
+                                                                >
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="airportSearchProvider"
+                                                                        value={option.value}
+                                                                        checked={currentAirportProvider === option.value}
+                                                                        onChange={() => handleAirportProviderChange(option.value)}
+                                                                        style={{ width: '18px', height: '18px', marginRight: '12px', cursor: 'pointer' }}
+                                                                    />
+                                                                    <div style={{ flex: 1 }}>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                                            <strong style={{ fontSize: '15px', color: '#1e293b' }}>{option.label}</strong>
+                                                                            <span style={{
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '4px',
+                                                                                fontSize: '11px',
+                                                                                fontWeight: '600',
+                                                                                color: '#fff',
+                                                                                background: option.badgeColor
+                                                                            }}>
+                                                                                {option.badge}
+                                                                            </span>
+                                                                        </div>
+                                                                        <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>{option.desc}</p>
+                                                                    </div>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+
+                                                        <div style={{ marginTop: '16px', padding: '12px', background: '#dcfce7', borderRadius: '6px', fontSize: '12px', color: '#166534' }}>
+                                                            <strong>ℹ️ Usage:</strong> This provider is used for airport autocomplete when you type airport names or codes in the trip planner.
+                                                            <br />
+                                                            <strong>Note:</strong> This is separate from flight search - it only finds airports, not flight prices.
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
 
                                     <div style={{ marginTop: '32px', padding: '16px', background: '#f1f5f9', borderRadius: '8px', fontSize: '13px', color: '#475569', lineHeight: '1.6' }}>
-                                        <strong style={{ display: 'block', marginBottom: '8px' }}>📝 Notes:</strong>
+                                        <strong style={{ display: 'block', marginBottom: '8px', color: '#1e293b' }}>💡 How Provider Selection Works:</strong>
                                         <ul style={{ margin: 0, paddingLeft: '20px' }}>
-                                            <li>APIs with priority settings are tried in order (lower number = higher priority)</li>
-                                            <li>If the first API fails or returns no results, the system will automatically try the next enabled API</li>
-                                            <li>Disabling an API will prevent it from being used, and the system will use fallback methods if available</li>
-                                            <li>Some APIs require API keys to be configured in the backend environment variables</li>
+                                            <li><strong>Automatic Fallback:</strong> If your selected provider fails, the system automatically tries the next available provider</li>
+                                            <li><strong>Cost Optimization:</strong> Free providers are recommended by default to minimize API costs</li>
+                                            <li><strong>Settings Saved Locally:</strong> Your provider preferences are saved in browser storage</li>
+                                            <li><strong>API Keys Required:</strong> Some providers need API keys configured in backend environment variables</li>
+                                            <li><strong>Airport Search:</strong> Uses separate APIs for airport autocomplete functionality</li>
                                         </ul>
+                                        <div style={{ marginTop: '12px', padding: '12px', background: '#dcfce7', borderRadius: '6px', color: '#166534' }}>
+                                            <strong>💰 Total Potential Savings:</strong> Using all free providers can save $5,000-5,700/year compared to paid alternatives!
+                                        </div>
                                     </div>
                                 </>
                             );

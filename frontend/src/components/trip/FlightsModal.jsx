@@ -472,73 +472,31 @@ const FlightsModal = ({
         </div>
         
         {/* API Source Selection */}
-        <div style={{ 
-          padding: '12px 20px', 
-          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
-          borderBottom: '1px solid #e5e7eb',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          flexWrap: 'wrap'
-        }}>
-          <span style={{ fontSize: '13px', fontWeight: '600', color: '#374151' }}>Search with:</span>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {apiOptions.map(api => {
-              const isActive = selectedSearchApi === api.id;
-              const isSearching = searchingWithApi === api.id || (api.id === 'all' && searchingWithApi === null && isLoading);
-              
-              return (
-                <button
-                  key={api.id}
-                  onClick={() => handleApiSearch(api.id)}
-                  disabled={isLoading}
-                  style={{
-                    padding: '8px 14px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    background: isActive ? api.color : '#fff',
-                    color: isActive ? '#fff' : '#374151',
-                    border: `2px solid ${isActive ? api.color : '#d1d5db'}`,
-                    borderRadius: '6px',
-                    cursor: isLoading ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    opacity: isLoading ? 0.6 : 1
-                  }}
-                >
-                  {isSearching && (
-                    <span 
-                      className="spinner-small" 
-                      style={{ 
-                        width: '12px', 
-                        height: '12px', 
-                        border: '2px solid rgba(255,255,255,0.3)', 
-                        borderTop: '2px solid #fff', 
-                        borderRadius: '50%', 
-                        animation: 'spin 1s linear infinite' 
-                      }} 
-                    />
-                  )}
-                  {api.label}
-                </button>
-              );
-            })}
-          </div>
-          {flightData?.source && (
-            <span style={{ 
-              marginLeft: 'auto', 
-              fontSize: '11px', 
-              color: '#6b7280',
-              background: '#f3f4f6',
-              padding: '4px 8px',
-              borderRadius: '4px'
-            }}>
-              Last result from: <strong>{flightData.source}</strong>
+        {/* Provider Info - Now configured in Settings */}
+        {flightData?.provider && (
+          <div style={{
+            padding: '10px 14px',
+            background: '#f0f9ff',
+            border: '1px solid #bfdbfe',
+            borderRadius: '0',
+            borderBottom: '1px solid #e5e7eb',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <span style={{ fontSize: '12px', color: '#1e40af', fontWeight: '500' }}>
+              ✓ Searched with: {flightData.provider}
             </span>
-          )}
-        </div>
+            <span style={{
+              marginLeft: 'auto',
+              fontSize: '11px',
+              color: '#64748b',
+              fontStyle: 'italic'
+            }}>
+              Configure providers in Settings
+            </span>
+          </div>
+        )}
         
         {/* Body */}
         <div className="ai-modal-body">

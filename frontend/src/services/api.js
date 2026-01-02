@@ -174,7 +174,8 @@ export const hotelsAPI = {
 
 // Flights API
 export const flightsAPI = {
-  search: (data) => api.post('/api/flights/search', data)
+  search: (data) => api.post('/api/flights/search', data),
+  searchWithProvider: (data) => api.post('/api/flights/search-provider', data)
 };
 
 // Distance API

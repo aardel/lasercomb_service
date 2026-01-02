@@ -114,10 +114,75 @@ async function searchGoogleFlights(originAirport, destAirport, departureDate, re
         
         if (flightOptions.length > 0) {
             const flights = flightOptions.slice(0, limit).map((flight, index) => {
-                // SerpAPI structure: flight.flights is an array of legs
-                const outbound = flight.flights && flight.flights[0] ? flight.flights[0] : null;
-                const returnLeg = returnDate && flight.flights && flight.flights[1] ? flight.flights[1] : null;
-                
+                // SerpAPI structure: flight.flights is an array of ALL segments (both outbound and return)
+                // For round-trip flights, we need to separate them by date
+                let outboundSegments = [];
+                let returnSegments = [];
+
+                if (flight.flights && flight.flights.length > 0) {
+                    if (returnDate) {
+                        // Round-trip: separate segments by date
+                        outboundSegments = flight.flights.filter(f => {
+                            const segmentDate = f.departure_airport?.time?.split(' ')[0];
+                            return segmentDate === departureDate;
+                        });
+                        returnSegments = flight.flights.filter(f => {
+                            const segmentDate = f.departure_airport?.time?.split(' ')[0];
+                            return segmentDate === returnDate;
+                        });
+
+                        console.log(`[FlightService] Flight ${index + 1}: ${outboundSegments.length} outbound segments, ${returnSegments.length} return segments`);
+                    } else {
+                        // One-way: all segments are outbound
+                        outboundSegments = flight.flights;
+                    }
+                }
+
+                // Build combined leg from multiple segments
+                const buildCombinedLeg = (segments, date) => {
+                    if (!segments || segments.length === 0) return null;
+
+                    const firstSeg = segments[0];
+                    const lastSeg = segments[segments.length - 1];
+
+                    // Build routing string showing all stops
+                    const airports = [firstSeg.departure_airport?.id];
+                    segments.forEach(seg => airports.push(seg.arrival_airport?.id));
+                    const routing = airports.filter(a => a).join(' → ');
+
+                    // Extract times
+                    const depTime = firstSeg.departure_airport?.time?.split(' ')[1] || '';
+                    const arrTime = lastSeg.arrival_airport?.time?.split(' ')[1] || '';
+
+                    // Calculate total duration
+                    const totalDuration = segments.reduce((sum, seg) => sum + (seg.duration || 0), 0);
+
+                    return {
+                        airline: firstSeg.airline || 'Multiple',
+                        flight_number: segments.length > 1 ? 'Multiple' : (firstSeg.flight_number || 'N/A'),
+                        departure_time: depTime.substring(0, 5),
+                        arrival_time: arrTime.substring(0, 5),
+                        date: date,
+                        duration_minutes: totalDuration,
+                        from: firstSeg.departure_airport?.id || '',
+                        to: lastSeg.arrival_airport?.id || '',
+                        routing: routing,
+                        stops: segments.length - 1,
+                        segments: segments.map(seg => ({
+                            from: seg.departure_airport?.id,
+                            to: seg.arrival_airport?.id,
+                            airline: seg.airline,
+                            flight_number: seg.flight_number,
+                            departure_time: seg.departure_airport?.time?.split(' ')[1]?.substring(0, 5),
+                            arrival_time: seg.arrival_airport?.time?.split(' ')[1]?.substring(0, 5),
+                            duration_minutes: seg.duration
+                        }))
+                    };
+                };
+
+                const outbound = buildCombinedLeg(outboundSegments, departureDate);
+                const returnLeg = buildCombinedLeg(returnSegments, returnDate);
+
                 // Parse price (could be number or string like "235" or "€235")
                 let price = 0;
                 if (typeof flight.price === 'number') {
@@ -126,15 +191,15 @@ async function searchGoogleFlights(originAirport, destAirport, departureDate, re
                     const priceStr = flight.price.replace(/[^0-9.]/g, '');
                     price = parseFloat(priceStr) || 0;
                 }
-                
+
                 return {
                     id: `google-${index}-${Date.now()}`,
                     price: price,
                     total_price: price,
                     is_round_trip: !!returnDate,
                     is_one_way: !returnDate,
-                    outbound: parseSerpAPIFlightLeg(outbound, departureDate),
-                    return: parseSerpAPIFlightLeg(returnLeg, returnDate),
+                    outbound: outbound,
+                    return: returnLeg,
                     type: 'STANDARD',
                     source: 'Google Flights (SerpAPI)'
                 };

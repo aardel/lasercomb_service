@@ -157,7 +157,15 @@ export const useLeafletMap = ({
         const map = L.map(mapRef.current, {
           center: [validStartingCoords.lat, validStartingCoords.lng],
           zoom: 12,
-          zoomControl: true
+          zoomControl: true,
+          // Enable all interactions
+          dragging: true,
+          touchZoom: true,
+          scrollWheelZoom: true,
+          doubleClickZoom: true,
+          boxZoom: true,
+          keyboard: true,
+          tap: true
         });
 
         // Add OpenStreetMap tiles (FREE)
