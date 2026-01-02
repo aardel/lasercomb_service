@@ -6,7 +6,7 @@ import { getSettings, getActiveTechnician, setActiveTechnician, updateTechnician
 import { saveCustomer, searchCustomers, getCustomerByPlace } from '../services/customerStorage';
 import { formatTime, formatHoursToTime, isEuropeanAirport, generateAirTravelLegs, logger, getAirlineName } from '../utils';
 import { TRAVEL_THRESHOLDS, API_NAMES, API_OPTION_NAMES, AI_OPTIONS, TIMEOUTS, FLIGHT_SEARCH_LIMITS, DEFAULTS } from '../constants/travelConstants';
-import { useMap } from '../hooks/useMap';
+import { useMapProvider as useMap } from '../hooks/useMapProvider';
 import { useFlightSearch } from '../hooks/useFlightSearch';
 import { useCostCalculation } from '../hooks/useCostCalculation';
 import {

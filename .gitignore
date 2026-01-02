@@ -7,6 +7,10 @@ package-lock.json
 .env.local
 .env.*.local
 
+# API Keys Documentation (DO NOT COMMIT)
+**/API keys/API_KEYS.txt
+API_KEYS.txt
+
 # Logs
 *.log
 npm-debug.log*

@@ -181,7 +181,10 @@ const defaultSettings = {
                 description: 'Airport search via Google Places API - requires GOOGLE_MAPS_API_KEY'
             }
         }
-    }
+    },
+
+    // Map Rendering Provider
+    mapRenderingProvider: 'leaflet' // Default to free Leaflet (OpenStreetMap). Options: 'leaflet' (FREE), 'google' (PAID)
 };
 
 // Get all settings (non-technician settings from localStorage)

@@ -2070,6 +2070,87 @@ const SettingsPage = () => {
                                         </div>
                                     </div>
 
+                                    {/* Map Rendering Provider Selection */}
+                                    <div style={{ marginBottom: '32px' }}>
+                                        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600', color: '#1e293b' }}>
+                                            🗺️ Map Rendering (Visual Display)
+                                        </h3>
+                                        <div style={{ padding: '16px', border: '2px solid #10b981', borderRadius: '8px', background: '#f0fdf4' }}>
+                                            {(() => {
+                                                const currentMapProvider = settings?.mapRenderingProvider || 'leaflet';
+
+                                                const handleMapProviderChange = (provider) => {
+                                                    const updatedSettings = {
+                                                        ...settings,
+                                                        mapRenderingProvider: provider
+                                                    };
+                                                    setSettings(updatedSettings);
+                                                    saveSettings(updatedSettings);
+                                                    setSaved(true);
+                                                    setTimeout(() => setSaved(false), 2000);
+                                                };
+
+                                                return (
+                                                    <>
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                                            {[
+                                                                { value: 'leaflet', label: '🆓 Leaflet + OpenStreetMap (Recommended)', desc: '100% free, open-source map rendering - no API costs, no limits', badge: 'FREE', badgeColor: '#10b981' },
+                                                                { value: 'google', label: '💳 Google Maps JavaScript', desc: 'Paid service ($7 per 1,000 map loads) - use as backup if needed', badge: 'Paid', badgeColor: '#ef4444' }
+                                                            ].map((option) => (
+                                                                <label
+                                                                    key={option.value}
+                                                                    style={{
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        padding: '14px',
+                                                                        border: currentMapProvider === option.value ? '2px solid #10b981' : '1px solid #cbd5e1',
+                                                                        borderRadius: '8px',
+                                                                        background: currentMapProvider === option.value ? '#fff' : '#f8fafc',
+                                                                        cursor: 'pointer',
+                                                                        transition: 'all 0.2s'
+                                                                    }}
+                                                                    onMouseEnter={(e) => e.currentTarget.style.borderColor = '#10b981'}
+                                                                    onMouseLeave={(e) => e.currentTarget.style.borderColor = currentMapProvider === option.value ? '#10b981' : '#cbd5e1'}
+                                                                >
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="mapRenderingProvider"
+                                                                        value={option.value}
+                                                                        checked={currentMapProvider === option.value}
+                                                                        onChange={() => handleMapProviderChange(option.value)}
+                                                                        style={{ width: '18px', height: '18px', marginRight: '12px', cursor: 'pointer' }}
+                                                                    />
+                                                                    <div style={{ flex: 1 }}>
+                                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                                            <strong style={{ fontSize: '15px', color: '#1e293b' }}>{option.label}</strong>
+                                                                            <span style={{
+                                                                                padding: '2px 8px',
+                                                                                borderRadius: '4px',
+                                                                                fontSize: '11px',
+                                                                                fontWeight: '600',
+                                                                                color: '#fff',
+                                                                                background: option.badgeColor
+                                                                            }}>
+                                                                                {option.badge}
+                                                                            </span>
+                                                                        </div>
+                                                                        <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>{option.desc}</p>
+                                                                    </div>
+                                                                </label>
+                                                            ))}
+                                                        </div>
+
+                                                        <div style={{ marginTop: '16px', padding: '12px', background: '#dcfce7', borderRadius: '6px', fontSize: '12px', color: '#166534' }}>
+                                                            <strong>💰 Cost Savings:</strong> Using Leaflet eliminates all map rendering costs (saves ~$50-70/month vs Google Maps JavaScript API).
+                                                            <br />
+                                                            <strong>Note:</strong> This only controls the visual map display. Backend geocoding/routing uses the provider selected above.
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+
                                     {renderApiGroup('🚗 Car Rental APIs', apiSettings.carRentalApis, 'carRentalApis', false)}
                                     {renderApiGroup('🏨 Hotel APIs', apiSettings.hotelApis, 'hotelApis', false)}
                                     {renderApiGroup('🛣️ Toll Calculation APIs', apiSettings.tollApis, 'tollApis', true)}
