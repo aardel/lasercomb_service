@@ -492,11 +492,40 @@ async function searchFlights(origin, destination, departureDate, returnDate = nu
         // Filter out invalid airports to avoid using stale/deleted airports
         let originAirport, destAirport;
         
-        const validCachedOriginAirports = cachedOriginAirports?.filter(a => a && a.code) || [];
-        const validCachedDestAirports = cachedDestAirports?.filter(a => a && a.code) || [];
+        // Priority order for origin airport:
+        // 1. Technician airports (from settings) - HIGHEST PRIORITY - respect technician settings
+        // 2. Selected airport code (if provided and matches technician airport)
+        // 3. Find nearest airport (only if no technician airports)
         
         if (validCachedOriginAirports.length > 0) {
-            // Use first cached airport (closest one)
+            // Priority 1: Use technician airports (respect technician settings)
+            const cached = validCachedOriginAirports[0];
+            originAirport = {
+                code: cached.code,
+                name: cached.name,
+                lat: cached.lat,
+                lng: cached.lng,
+                distance_km: cached.distance_km || 0,
+                source: 'technician_settings'
+            };
+            console.log(`[FlightService] Using technician airport: ${originAirport.code} (${originAirport.name}) - respecting technician settings`);
+        } else if (origin?.code) {
+            // Priority 2: Use airport code if provided (user manually selected, but no tech airports)
+            console.log(`[FlightService] Origin has airport code: ${origin.code}, using it directly (no technician airports configured)`);
+            // Try to enrich with full airport details from database
+            const airportDetails = require('./airport.service').findAirportByIATALocal(origin.code);
+            originAirport = {
+                code: origin.code,
+                name: airportDetails?.name || origin.name || `${origin.code} Airport`,
+                lat: origin.lat || origin.latitude || airportDetails?.lat,
+                lng: origin.lng || origin.longitude || airportDetails?.lng,
+                distance_km: origin.distance_km || 0,
+                city: airportDetails?.city || origin.city,
+                country: airportDetails?.country || origin.country,
+                source: 'provided'
+            };
+        } else {
+            // Priority 2: Use first cached airport (closest one)
             const cached = validCachedOriginAirports[0];
             originAirport = {
                 code: cached.code,
@@ -507,8 +536,8 @@ async function searchFlights(origin, destination, departureDate, returnDate = nu
                 source: 'cached'
             };
             console.log(`[FlightService] Using cached origin airport: ${originAirport.code} (from ${validCachedOriginAirports.length} valid airports)`);
-        } else {
-            console.log(`[FlightService] No valid cached origin airports, finding nearest...`);
+            // Priority 3: Find nearest airport (only if no technician airports and no code provided)
+            console.log(`[FlightService] No technician airports and no airport code provided, finding nearest...`);
             try {
                 originAirport = await findNearestAirport(origin);
             } catch (airportError) {
@@ -522,8 +551,24 @@ async function searchFlights(origin, destination, departureDate, returnDate = nu
             }
         }
         
-        if (validCachedDestAirports.length > 0) {
-            // Use first cached airport (closest one)
+        // For destination: Priority 1 is selected airport code, Priority 2 is find nearest
+        // (No technician airports for destination - it's customer location)
+        if (destination?.code) {
+            console.log(`[FlightService] Destination has airport code: ${destination.code}, using it directly (preserving selected airport)`);
+            // Try to enrich with full airport details from database
+            const airportDetails = require('./airport.service').findAirportByIATALocal(destination.code);
+            destAirport = {
+                code: destination.code,
+                name: airportDetails?.name || destination.name || `${destination.code} Airport`,
+                lat: destination.lat || destination.latitude || airportDetails?.lat,
+                lng: destination.lng || destination.longitude || airportDetails?.lng,
+                distance_km: destination.distance_km || 0,
+                city: airportDetails?.city || destination.city,
+                country: airportDetails?.country || destination.country,
+                source: 'provided'
+            };
+        } else if (validCachedDestAirports.length > 0) {
+            // Priority 2: Use first cached airport (closest one)
             const cached = validCachedDestAirports[0];
             destAirport = {
                 code: cached.code,
@@ -535,7 +580,8 @@ async function searchFlights(origin, destination, departureDate, returnDate = nu
             };
             console.log(`[FlightService] Using cached destination airport: ${destAirport.code} (from ${validCachedDestAirports.length} valid airports)`);
         } else {
-            console.log(`[FlightService] No valid cached destination airports, finding nearest...`);
+            // Priority 3: Find nearest airport
+            console.log(`[FlightService] No airport code provided and no cached airports, finding nearest...`);
             try {
                 destAirport = await findNearestAirport(destination);
             } catch (airportError) {

@@ -119,6 +119,8 @@ async function getAllTechnicians() {
         parking_cost_per_day as "parkingCostPerDay",
         time_to_airport as "timeToAirport",
         airports,
+        personal_number as "personalNumber",
+        department,
         is_default as "isDefault",
         is_active as "isActive",
         created_at as "createdAt",
@@ -160,6 +162,8 @@ async function getTechnicianById(id) {
         parking_cost_per_day as "parkingCostPerDay",
         time_to_airport as "timeToAirport",
         airports,
+        personal_number as "personalNumber",
+        department,
         is_default as "isDefault",
         is_active as "isActive",
         created_at as "createdAt",
@@ -270,12 +274,14 @@ async function saveTechnician(technician) {
       countryCode = null;
     }
     
+    const { personalNumber, department } = technician;
+    
     const result = await pool.query(
       `INSERT INTO technicians (
         id, name, home_address, home_latitude, home_longitude, country,
         transport_to_airport, taxi_cost, parking_cost_per_day, time_to_airport,
-        airports, is_default, is_active, updated_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, true, CURRENT_TIMESTAMP)
+        airports, personal_number, department, is_default, is_active, updated_at
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, true, CURRENT_TIMESTAMP)
       ON CONFLICT (id) DO UPDATE SET
         name = EXCLUDED.name,
         home_address = EXCLUDED.home_address,
@@ -287,6 +293,8 @@ async function saveTechnician(technician) {
         parking_cost_per_day = EXCLUDED.parking_cost_per_day,
         time_to_airport = EXCLUDED.time_to_airport,
         airports = EXCLUDED.airports,
+        personal_number = EXCLUDED.personal_number,
+        department = EXCLUDED.department,
         is_default = EXCLUDED.is_default,
         updated_at = CURRENT_TIMESTAMP
       RETURNING *`,
@@ -302,6 +310,8 @@ async function saveTechnician(technician) {
         parkingCostPerDay || 15.00,
         timeToAirport || 45,
         JSON.stringify(airports || []),
+        personalNumber || null,
+        department || null,
         isDefault || false
       ]
     );
@@ -321,6 +331,8 @@ async function saveTechnician(technician) {
       parkingCostPerDay: parseFloat(saved.parking_cost_per_day),
       timeToAirport: saved.time_to_airport,
       airports: saved.airports || [],
+      personalNumber: saved.personal_number,
+      department: saved.department,
       isDefault: saved.is_default,
       isActive: saved.is_active
     };

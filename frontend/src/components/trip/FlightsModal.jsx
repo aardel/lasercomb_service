@@ -36,21 +36,55 @@ const FlightsModal = ({
   const customer = customers.find(c => c.id === customerId);
   const flightData = flights[customerId];
   const isLoading = loadingFlights[customerId];
+  const hasExistingFlights = flightData?.options?.length > 0;
 
-  // API options for search
+  // API options for search (user can click these to search with different APIs)
   const apiOptions = [
-    { id: 'all', label: '🔄 All APIs', color: '#6366f1' },
-    { id: 'groq', label: '🤖 Groq AI', color: '#10b981' },
-    { id: 'amadeus', label: '✈️ Amadeus', color: '#3b82f6' },
-    { id: 'serpapi', label: '🔍 Google Flights', color: '#f59e0b' }
+    { 
+      id: 'all', 
+      label: '🔄 All APIs', 
+      color: '#6366f1',
+      description: 'Try all providers in order (Serper → Amadeus → Groq)',
+      badge: 'Auto'
+    },
+    { 
+      id: 'serper', 
+      label: '🔍 Serper', 
+      color: '#8b5cf6',
+      description: 'FREE 2,500 queries, then $1/1,000 (15x cheaper than SerpAPI)',
+      badge: '⭐ Recommended'
+    },
+    { 
+      id: 'amadeus', 
+      label: '✈️ Amadeus', 
+      color: '#3b82f6',
+      description: 'Official airline data - FREE 2,000 requests/month',
+      badge: 'FREE'
+    },
+    { 
+      id: 'groq', 
+      label: '🤖 Groq AI', 
+      color: '#10b981',
+      description: 'AI-powered estimates - FREE 14,400 requests/day',
+      badge: 'FREE'
+    },
+    { 
+      id: 'serpapi', 
+      label: '💰 SerpAPI', 
+      color: '#f59e0b',
+      description: 'Legacy provider - $75/month for 5,000 searches',
+      badge: 'Expensive'
+    }
   ];
 
-  // Handle API search
+  // Handle API search - user clicked a button to search with specific API
   const handleApiSearch = async (apiId) => {
     setSelectedSearchApi(apiId);
     if (customer?.coordinates) {
-      console.log(`[FlightsModal] Searching with ${apiId} API for customer:`, customerId);
-      await fetchTravelOptions(customerId, customer.coordinates, false, false, false, apiId === 'all' ? null : apiId);
+      console.log(`[FlightsModal] User requested search with ${apiId} API for customer:`, customerId);
+      // Map 'serper' to the API constant, or pass as-is for other APIs
+      const apiToUse = apiId === 'all' ? null : (apiId === 'serper' ? 'serper' : apiId);
+      await fetchTravelOptions(customerId, customer.coordinates, false, false, false, apiToUse);
     }
   };
 
@@ -472,31 +506,109 @@ const FlightsModal = ({
         </div>
         
         {/* API Source Selection */}
-        {/* Provider Info - Now configured in Settings */}
-        {flightData?.provider && (
-          <div style={{
-            padding: '10px 14px',
-            background: '#f0f9ff',
-            border: '1px solid #bfdbfe',
-            borderRadius: '0',
-            borderBottom: '1px solid #e5e7eb',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px'
-          }}>
-            <span style={{ fontSize: '12px', color: '#1e40af', fontWeight: '500' }}>
-              ✓ Searched with: {flightData.provider}
+        {/* API Search Options */}
+        <div style={{
+          padding: '12px 20px',
+          background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+          borderBottom: '1px solid #e5e7eb',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          flexWrap: 'wrap'
+        }}>
+          <span style={{ fontSize: '13px', fontWeight: '600', color: '#374151' }}>Search with:</span>
+          {hasExistingFlights && (
+            <span style={{
+              fontSize: '11px',
+              color: '#059669',
+              background: '#d1fae5',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              fontWeight: '600'
+            }}>
+              📦 Showing cached flights - Click buttons below to search with different APIs
             </span>
+          )}
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+            {apiOptions.map(api => {
+              const isActive = selectedSearchApi === api.id;
+              const isSearching = searchingWithApi === api.id || (api.id === 'all' && searchingWithApi === null && isLoading);
+
+              return (
+                <div
+                  key={api.id}
+                  style={{
+                    position: 'relative',
+                    display: 'inline-block'
+                  }}
+                  title={api.description}
+                >
+                  <button
+                    onClick={() => handleApiSearch(api.id)}
+                    disabled={isLoading}
+                    style={{
+                      padding: '8px 14px',
+                      fontSize: '12px',
+                      fontWeight: '600',
+                      background: isActive ? api.color : '#fff',
+                      color: isActive ? '#fff' : '#374151',
+                      border: `2px solid ${isActive ? api.color : '#d1d5db'}`,
+                      borderRadius: '6px',
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      opacity: isLoading ? 0.6 : 1,
+                      position: 'relative'
+                    }}
+                  >
+                    {isSearching && (
+                      <span
+                        className="spinner-small"
+                        style={{
+                          width: '12px',
+                          height: '12px',
+                          border: '2px solid rgba(255,255,255,0.3)',
+                          borderTop: '2px solid #fff',
+                          borderRadius: '50%',
+                          animation: 'spin 1s linear infinite'
+                        }}
+                      />
+                    )}
+                    {api.label}
+                    {api.badge && (
+                      <span style={{
+                        fontSize: '9px',
+                        background: isActive ? 'rgba(255,255,255,0.3)' : api.color,
+                        color: isActive ? '#fff' : '#fff',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontWeight: '700',
+                        marginLeft: '4px',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        {api.badge}
+                      </span>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          {flightData?.source && (
             <span style={{
               marginLeft: 'auto',
               fontSize: '11px',
-              color: '#64748b',
-              fontStyle: 'italic'
+              color: '#6b7280',
+              background: '#f3f4f6',
+              padding: '4px 8px',
+              borderRadius: '4px'
             }}>
-              Configure providers in Settings
+              Last result from: <strong>{flightData.source}</strong>
             </span>
-          </div>
-        )}
+          )}
+        </div>
         
         {/* Body */}
         <div className="ai-modal-body">

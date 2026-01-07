@@ -146,7 +146,7 @@ class Trip {
     for (const field of allowedFields) {
       if (tripData[field] !== undefined) {
         if (field === 'metadata' || field === 'optimized_route') {
-          updates.push(`${field} = $${paramCount}::jsonb`);
+          updates.push(`${field} = $${paramCount}`);
           values.push(JSON.stringify(tripData[field]));
         } else {
           updates.push(`${field} = $${paramCount}`);

@@ -14,14 +14,16 @@ export const TRAVEL_THRESHOLDS = {
 // API configuration
 export const API_NAMES = {
   ALL: 'all',
+  SERPER: 'serper',        // Serper API (recommended - cheaper than SerpAPI)
   GROQ: 'groq',
   AMADEUS: 'amadeus',
-  SERPAPI: 'serpapi',
+  SERPAPI: 'serpapi',      // Legacy, expensive
   GOOGLE_FLIGHTS: 'serpapi'  // SerpAPI is used for Google Flights
 };
 
 // API option names for UI
 export const API_OPTION_NAMES = {
+  [API_NAMES.SERPER]: 'Serper API',
   [API_NAMES.GROQ]: 'Groq AI',
   [API_NAMES.AMADEUS]: 'Amadeus API',
   [API_NAMES.SERPAPI]: 'Google Flights (SerpAPI)'

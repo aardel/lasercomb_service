@@ -31,6 +31,14 @@ function Navigation() {
         </li>
         <li>
           <Link
+            to="/expenses"
+            className={isActive('/expenses') ? 'active' : ''}
+          >
+            💰 Expenses
+          </Link>
+        </li>
+        <li>
+          <Link
             to="/settings"
             className={isActive('/settings') ? 'active' : ''}
           >

@@ -258,10 +258,11 @@ export const useFlightSearch = ({
       searchReturnDate = outboundOnly ? null : returnDateStr;
     }
 
-    // Get fresh technician data
+    // Get fresh technician data and airports
+    let validTechAirports = [];
     try {
       const freshTech = await getActiveTechnician();
-      const validTechAirports = freshTech?.airports?.filter(a => a && a.code) || [];
+      validTechAirports = freshTech?.airports?.filter(a => a && a.code) || [];
 
       if (freshTech && (!selectedTechnician || selectedTechnician.id !== freshTech.id ||
         JSON.stringify(selectedTechnician.airports || []) !== JSON.stringify(validTechAirports))) {
@@ -294,8 +295,9 @@ export const useFlightSearch = ({
         logger.debug('FlightSearch', `Forcing search with specific API: ${forceApi}`);
         setSearchingWithApi(forceApi);
         flightApiPreferences = {
+          serper: { enabled: forceApi === API_NAMES.SERPER || forceApi === 'serper', priority: 1, name: API_OPTION_NAMES[API_NAMES.SERPER] || 'Serper API' },
           amadeus: { enabled: forceApi === API_NAMES.AMADEUS, priority: 1, name: API_OPTION_NAMES[API_NAMES.AMADEUS] },
-          googleFlights: { enabled: forceApi === API_NAMES.SERPAPI, priority: 1, name: API_OPTION_NAMES[API_NAMES.SERPAPI] },
+          googleFlights: { enabled: forceApi === API_NAMES.SERPAPI || forceApi === 'serpapi', priority: 1, name: API_OPTION_NAMES[API_NAMES.SERPAPI] },
           groq: { enabled: forceApi === API_NAMES.GROQ, priority: 1, name: API_OPTION_NAMES[API_NAMES.GROQ] }
         };
       } else {
@@ -307,7 +309,7 @@ export const useFlightSearch = ({
 
       // Pre-flight check: Verify backend is available
       const isBackendHealthy = await checkBackendHealth();
-      
+
       if (!isBackendHealthy) {
         logger.warn('FlightSearch', 'Backend health check failed, aborting flight search');
         return {
@@ -317,71 +319,59 @@ export const useFlightSearch = ({
         };
       }
 
-      // Get flight search provider preference (default to Serper)
-      const flightProvider = settings?.flightSearchProvider || 'serper';
-      const providers = [flightProvider]; // Use selected provider first
+      // Determine which airports to use for origin (technician airports take priority)
+      // Only use selected airport if it's NOT from technician airports (user manually selected alternative)
+      const originHasCode = searchOrigin?.code;
+      const originIsTechAirport = originHasCode && validTechAirports.some(a => a.code === searchOrigin.code);
+      const shouldUseTechAirports = validTechAirports.length > 0 && (!originHasCode || originIsTechAirport);
+      
+      // For origin: Use technician airports if available and no manual selection, or if selected airport is a tech airport
+      const cachedOriginAirports = shouldUseTechAirports ? validTechAirports : null;
+      
+      // For destination: No technician airports (customer location)
+      const cachedDestAirports = null;
 
-      // Add fallback providers
-      if (flightProvider !== 'serper') providers.push('serper');
-      if (flightProvider !== 'amadeus') providers.push('amadeus');
-      if (flightProvider !== 'groq') providers.push('groq');
+      logger.debug('FlightSearch', `Airport selection: originHasCode=${originHasCode}, originIsTechAirport=${originIsTechAirport}, shouldUseTechAirports=${shouldUseTechAirports}`);
+      if (cachedOriginAirports) {
+        logger.info('FlightSearch', `Passing technician airports to backend: ${cachedOriginAirports.map(a => a.code).join(', ')}`);
+      }
 
-      logger.debug('FlightSearch', `Using provider: ${flightProvider}, fallbacks: ${providers.join(', ')}`);
-
-      // Search flights using new provider system
-      const response = await flightsAPI.searchWithProvider({
+      // Search flights using working endpoint (with connecting flights fix)
+      const response = await flightsAPI.search({
         origin: searchOrigin,
         destination: searchDestination,
         departureDate: returnOnly ? returnDateStr : tripDate,
         returnDate: searchReturnDate,
-        passengers: 1,
-        maxResults: FLIGHT_SEARCH_LIMITS.MAX_RESULTS,
-        providers: providers
+        limit: FLIGHT_SEARCH_LIMITS.MAX_RESULTS,
+        apiPreferences: flightApiPreferences,
+        cachedOriginAirports: cachedOriginAirports,
+        cachedDestAirports: cachedDestAirports
       });
 
       logger.debug('FlightSearch', `Flights response for ${customerId}:`, response.data);
-
-      // New provider format: response.data.flights instead of response.data.options
-      const flightOptions = response.data.flights || response.data.options || [];
-      logger.debug('FlightSearch', `Provider: ${response.data.provider}, Flights count: ${flightOptions.length}`);
-
-      // Convert provider response to old format for compatibility
-      const formattedResponse = {
-        success: response.data.success,
-        options: flightOptions,
-        provider: response.data.provider,
-        source: response.data.provider,
-        origin_airport: {
-          code: searchOrigin.code,
-          lat: searchOrigin.lat,
-          lng: searchOrigin.lng
-        },
-        destination_airport: {
-          code: searchDestination.code,
-          lat: searchDestination.lat,
-          lng: searchDestination.lng
-        },
-        rental_car_options: [] // Provider endpoint doesn't return rental cars yet
-      };
+      logger.debug('FlightSearch', `Options count: ${response.data.options?.length}, Rental cars count: ${response.data.rental_car_options?.length}`);
 
       // Update API status
-      updateApiStatusFromResponse(formattedResponse);
+      updateApiStatusFromResponse(response.data);
 
       // Update state
-      setFlights(prev => ({ ...prev, [customerId]: formattedResponse }));
-      setRentalCars(prev => ({ ...prev, [customerId]: [] })); // TODO: Add rental car provider integration
+      setFlights(prev => ({ ...prev, [customerId]: response.data }));
+      setRentalCars(prev => ({ ...prev, [customerId]: response.data.rental_car_options || [] }));
 
       // Update airport options
-      updateAirportOptionsFromResponse(customerId, formattedResponse);
+      updateAirportOptionsFromResponse(customerId, response.data);
 
-      // Auto-select first flight (if not AI-selected)
-      if (formattedResponse.success && flightOptions.length > 0) {
+      // Auto-select first flight and rental car (if not AI-selected)
+      if (response.data.success && response.data.options && response.data.options.length > 0) {
         const currentFlightIsAI = selectedFlight?.source === 'ai_recommendation';
         if (!currentFlightIsAI) {
-          setSelectedFlight(flightOptions[0]);
+          setSelectedFlight(response.data.options[0]);
         } else {
           logger.debug('FlightSearch', 'Preserving AI-selected flight, not overwriting with search results');
         }
+      }
+      if (response.data.rental_car_options && response.data.rental_car_options.length > 0) {
+        setSelectedRentalCar(response.data.rental_car_options[0]);
       }
 
       return response.data;

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Receipt Scanner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .status.waiting {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status.connected {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.uploading {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 4/3;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .camera-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: white;
+            font-size: 18px;
+        }
+
+        .preview-container {
+            position: relative;
+            width: 100%;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            display: none;
+        }
+
+        #preview {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .crop-overlay {
+            position: absolute;
+            border: 2px dashed #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            pointer-events: none;
+            display: none;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #d1d5db;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #059669;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #dc2626;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .instructions {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📷 Receipt Scanner</h1>
+        
+        <div id="status" class="status waiting">Connecting...</div>
+        <div id="errorMessage" class="error-message"></div>
+
+        <div class="instructions" id="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Allow camera access when prompted</li>
+                <li>Position the receipt in the camera view</li>
+                <li>Tap "Capture Photo" to take a picture</li>
+                <li>Adjust the crop area if needed</li>
+                <li>Tap "Upload Receipt" to send</li>
+            </ol>
+        </div>
+
+        <div class="camera-container" id="cameraContainer">
+            <video id="video" autoplay playsinline></video>
+            <div class="camera-placeholder" id="cameraPlaceholder">
+                Camera will appear here
+            </div>
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+            <img id="preview" alt="Receipt preview">
+            <div class="crop-overlay" id="cropOverlay"></div>
+        </div>
+
+        <canvas id="canvas"></canvas>
+
+        <div class="controls">
+            <button id="startCameraBtn" class="btn-primary" onclick="startCamera()">Start Camera</button>
+            <button id="captureBtn" class="btn-primary" onclick="capturePhoto()" style="display: none;">Capture Photo</button>
+            <button id="retakeBtn" class="btn-secondary" onclick="retakePhoto()" style="display: none;">Retake</button>
+            <button id="uploadBtn" class="btn-success" onclick="uploadReceipt()" style="display: none;">Upload Receipt</button>
+            <button id="cancelBtn" class="btn-danger" onclick="cancel()" style="display: none;">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Get session token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionToken = urlParams.get('token');
+        const expenseId = urlParams.get('expenseId');
+        const receiptNumber = urlParams.get('receiptNumber');
+
+        if (!sessionToken) {
+            showError('Missing session token. Please scan the QR code again.');
+            document.getElementById('startCameraBtn').disabled = true;
+        }
+
+        let stream = null;
+        let capturedImage = null;
+        let ws = null;
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const preview = document.getElementById('preview');
+        const statusDiv = document.getElementById('status');
+        const cameraContainer = document.getElementById('cameraContainer');
+        const previewContainer = document.getElementById('previewContainer');
+        const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+
+        // Connect to WebSocket
+        function connectWebSocket() {
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsHost = window.location.hostname;
+            const wsPort = window.location.port || '3000';
+            const wsUrl = `${wsProtocol}//${wsHost}:${wsPort}/ws/receipt-scanning`;
+
+            try {
+                ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    updateStatus('connected', 'Connected to server');
+                    // Send connection message with token
+                    ws.send(JSON.stringify({
+                        type: 'connect',
+                        token: sessionToken
+                    }));
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.type === 'connected') {
+                            updateStatus('connected', 'Ready to scan receipt');
+                        } else if (data.type === 'upload-success') {
+                            updateStatus('success', '✓ Receipt uploaded successfully!');
+                            setTimeout(() => {
+                                alert('Receipt uploaded successfully! You can close this page.');
+                            }, 1000);
+                        } else if (data.type === 'error' || data.type === 'upload-error') {
+                            showError(data.message || 'Upload failed');
+                            updateStatus('error', 'Upload failed');
+                        }
+                    } catch (error) {
+                        console.error('Error parsing WebSocket message:', error);
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                    showError('Connection error. Please try again.');
+                    updateStatus('error', 'Connection error');
+                };
+
+                ws.onclose = () => {
+                    console.log('WebSocket closed');
+                    updateStatus('waiting', 'Connection closed');
+                };
+            } catch (error) {
+                console.error('Error connecting WebSocket:', error);
+                showError('Failed to connect. Please check your connection.');
+            }
+        }
+
+        // Start camera
+        async function startCamera() {
+            try {
+                updateStatus('waiting', 'Requesting camera access...');
+                
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment', // Use back camera on mobile
+                        width: { ideal: 1920 },
+                        height: { ideal: 1080 }
+                    }
+                });
+
+                video.srcObject = stream;
+                video.style.display = 'block';
+                cameraPlaceholder.style.display = 'none';
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('captureBtn').style.display = 'block';
+                document.getElementById('instructions').style.display = 'none';
+                updateStatus('connected', 'Camera ready - Position receipt and tap Capture');
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                showError('Camera access denied. Please allow camera access and try again.');
+                updateStatus('error', 'Camera access denied');
+            }
+        }
+
+        // Capture photo
+        function capturePhoto() {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+
+            // Stop camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+
+            // Show preview
+            capturedImage = canvas.toDataURL('image/jpeg', 0.9);
+            preview.src = capturedImage;
+            video.style.display = 'none';
+            cameraContainer.style.display = 'none';
+            previewContainer.style.display = 'block';
+            document.getElementById('captureBtn').style.display = 'none';
+            document.getElementById('retakeBtn').style.display = 'block';
+            document.getElementById('uploadBtn').style.display = 'block';
+            document.getElementById('cancelBtn').style.display = 'block';
+            updateStatus('connected', 'Review photo and tap Upload');
+        }
+
+        // Retake photo
+        function retakePhoto() {
+            previewContainer.style.display = 'none';
+            cameraContainer.style.display = 'block';
+            document.getElementById('retakeBtn').style.display = 'none';
+            document.getElementById('uploadBtn').style.display = 'none';
+            document.getElementById('cancelBtn').style.display = 'none';
+            startCamera();
+        }
+
+        // Upload receipt
+        function uploadReceipt() {
+            if (!capturedImage || !ws || ws.readyState !== WebSocket.OPEN) {
+                showError('Not connected. Please try again.');
+                return;
+            }
+
+            updateStatus('uploading', 'Uploading receipt...');
+            document.getElementById('uploadBtn').disabled = true;
+
+            // Convert data URL to base64 (remove data:image/jpeg;base64, prefix)
+            const base64Data = capturedImage.split(',')[1];
+
+            // Send image via WebSocket
+            ws.send(JSON.stringify({
+                type: 'image-upload',
+                imageData: base64Data,
+                mimeType: 'image/jpeg'
+            }));
+        }
+
+        // Cancel
+        function cancel() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            if (ws) {
+                ws.close();
+            }
+            window.close();
+        }
+
+        // Update status
+        function updateStatus(type, message) {
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+
+        // Show error
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            if (sessionToken) {
+                connectWebSocket();
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            if (ws) {
+                ws.close();
+            }
+        });
+    </script>
+</body>
+</html>

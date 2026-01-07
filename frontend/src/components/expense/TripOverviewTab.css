@@ -1,0 +1,67 @@
+.trip-overview-tab {
+  padding: 20px;
+}
+
+.tab-header {
+  margin-bottom: 30px;
+}
+
+.tab-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.overview-section {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 600px;
+}
+
+.overview-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.overview-item:last-child {
+  border-bottom: none;
+}
+
+.overview-item.total {
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 2px solid #3b82f6;
+  border-bottom: none;
+}
+
+.overview-item label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+
+.overview-item.total label {
+  font-size: 16px;
+  color: #333;
+}
+
+.amount-value {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.overview-item.total .amount-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.total-amount {
+  color: #3b82f6 !important;
+}

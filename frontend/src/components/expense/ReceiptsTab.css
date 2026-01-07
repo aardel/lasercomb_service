@@ -1,0 +1,305 @@
+.receipts-tab {
+  padding: 20px;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.tab-header h2 {
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.scan-documents-btn,
+.add-receipt-btn {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.scan-documents-btn:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.scan-documents-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.add-receipt-btn {
+  background-color: #2196F3;
+}
+
+.add-receipt-btn:hover {
+  background-color: #0b7dda;
+}
+
+.receipts-table {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.receipts-table table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.receipts-table thead {
+  background-color: #f5f5f5;
+}
+
+.receipts-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+.receipts-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.receipts-table input,
+.receipts-table select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.receipts-table input:focus,
+.receipts-table select:focus {
+  outline: none;
+  border-color: #2196F3;
+}
+
+.remove-receipt-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-receipt-btn:hover {
+  background: #da190b;
+}
+
+.loading-indicator {
+  margin-left: 5px;
+  font-size: 12px;
+}
+
+.receipts-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+.online-exchange-rates-btn {
+  padding: 10px 20px;
+  background-color: #FF9800;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.online-exchange-rates-btn:hover {
+  background-color: #F57C00;
+}
+
+.total-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.total-section label {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.total-amount {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2196F3;
+}
+
+/* QR Code Modal Styles */
+.qr-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.qr-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.qr-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.qr-modal-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.close-btn:hover {
+  background-color: #f5f5f5;
+  color: #000;
+}
+
+.qr-modal-content {
+  padding: 20px;
+  text-align: center;
+}
+
+.qr-code-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.qr-code-image {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background: white;
+}
+
+.scanning-status {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.scanning-status p {
+  margin: 5px 0;
+}
+
+.status-message {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.status-message.success {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.status-message.error {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.qr-instructions {
+  margin-top: 20px;
+  text-align: left;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.qr-instructions h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.qr-instructions ol {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.qr-instructions li {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.qr-modal-footer {
+  padding: 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.qr-modal-footer button {
+  padding: 10px 20px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.qr-modal-footer button:hover {
+  background-color: #0b7dda;
+}

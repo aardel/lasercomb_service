@@ -10,7 +10,7 @@ const flightProvider = require('../services/flight-provider.service');
  */
 router.post('/search', async (req, res) => {
     try {
-        const { origin, destination, date, departureDate, returnDate, limit, apiPreferences } = req.body;
+        const { origin, destination, date, departureDate, returnDate, limit, apiPreferences, cachedOriginAirports, cachedDestAirports } = req.body;
         const actualDepartureDate = departureDate || date;
         const actualLimit = limit || 5; // Default to 5 if not provided
 
@@ -19,6 +19,8 @@ router.post('/search', async (req, res) => {
         console.log('[FlightRoute]   - departure:', actualDepartureDate);
         console.log('[FlightRoute]   - return:', returnDate);
         console.log('[FlightRoute]   - API preferences:', apiPreferences ? JSON.stringify(apiPreferences, null, 2) : 'using defaults');
+        console.log('[FlightRoute]   - cachedOriginAirports:', cachedOriginAirports ? `${cachedOriginAirports.length} airports (${cachedOriginAirports.map(a => a.code).join(', ')})` : 'none');
+        console.log('[FlightRoute]   - cachedDestAirports:', cachedDestAirports ? `${cachedDestAirports.length} airports` : 'none');
 
         if (!origin || !destination || !actualDepartureDate) {
             return res.status(400).json({
@@ -30,7 +32,7 @@ router.post('/search', async (req, res) => {
         // Wrap in additional try-catch to prevent any unhandled errors from crashing the server
         let results;
         try {
-            results = await flightService.searchFlights(origin, destination, actualDepartureDate, returnDate, actualLimit, null, null, apiPreferences);
+            results = await flightService.searchFlights(origin, destination, actualDepartureDate, returnDate, actualLimit, cachedOriginAirports, cachedDestAirports, apiPreferences);
         } catch (serviceError) {
             console.error('[FlightRoute] ❌ Flight service error:', serviceError);
             console.error('[FlightRoute] Error stack:', serviceError.stack);

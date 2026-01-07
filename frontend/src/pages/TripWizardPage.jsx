@@ -2400,29 +2400,22 @@ Your entire response should look like this (no extra text):
   }, [customers]);
   
   // Refresh flights modal when customer changes or technician airports change (if modal is open)
-  // FIXED: Removed problematic dependencies that were causing infinite loops
+  // Modal opened - show cached flights, don't trigger new search automatically
+  // User can manually search with different APIs using the buttons in the modal
   useEffect(() => {
     if (showFlightsModal && flightsModalCustomerId) {
       const customer = customers.find(c => c.id === flightsModalCustomerId);
-      // If customer coordinates exist and not already loading
-      if (customer?.coordinates && !loadingFlights[flightsModalCustomerId]) {
-        // Check if we already have flight data for this customer
-        const hasExistingFlights = flights[flightsModalCustomerId]?.options?.length > 0;
-
-        // Only refresh if NO flight data exists
-        // (The user can manually refresh using the refresh button if needed)
-        if (!hasExistingFlights) {
-          logger.debug('FlightSearch', 'Modal opened for customer with no flights, searching...');
-
-          // Simple async fetch without complex technician refresh logic
-          // (Technician refresh happens in the main useEffect)
-          fetchTravelOptions(flightsModalCustomerId, customer.coordinates, false, false, false, false)
-            .catch(error => {
-              logger.error('FlightSearch', 'Error fetching flights for modal:', error);
-            });
-        } else {
-          logger.debug('FlightSearch', 'Modal opened - using existing flight data');
-        }
+      const hasExistingFlights = flights[flightsModalCustomerId]?.options?.length > 0;
+      
+      if (hasExistingFlights) {
+        logger.debug('FlightSearch', 'Modal opened - displaying cached flights (no auto-search)');
+      } else if (customer?.coordinates && !loadingFlights[flightsModalCustomerId]) {
+        // Only search if NO cached flights exist and not currently loading
+        logger.debug('FlightSearch', 'Modal opened with no cached flights, searching...');
+        fetchTravelOptions(flightsModalCustomerId, customer.coordinates, false, false, false, false)
+          .catch(error => {
+            logger.error('FlightSearch', 'Error fetching flights for modal:', error);
+          });
       } else if (!customer?.coordinates) {
         logger.warn('FlightSearch', `Customer ${flightsModalCustomerId} has no coordinates, cannot search flights`);
       }
@@ -2916,43 +2909,27 @@ Your entire response should look like this (no extra text):
               }
               
               const targetCustomer = activeCustomers[0];
-              const { getActiveTechnician } = await import('../services/settingsStorage');
-              const freshTech = await getActiveTechnician();
-              const validTechAirports = freshTech?.airports?.filter(a => a && a.code) || [];
-              
-              if (freshTech && (!selectedTechnician || selectedTechnician.id !== freshTech.id || 
-                  JSON.stringify(selectedTechnician.airports || []) !== JSON.stringify(validTechAirports))) {
-                logger.debug('FlightSearch', 'Technician airports changed, updating and clearing cache');
-                setSelectedTechnician(freshTech);
-                setFlights(prev => {
-                  const updated = { ...prev };
-                  delete updated[targetCustomer.id];
-                  return updated;
-                });
-              }
-              
               const hasFlights = flights[targetCustomer.id]?.options?.length > 0;
               const isSearching = loadingFlights[targetCustomer.id];
               
-              if (!hasFlights && !isSearching && targetCustomer.coordinates) {
-                logger.debug('FlightSearch', 'Triggering fresh flight search for customer:', targetCustomer.id);
-                await fetchTravelOptions(targetCustomer.id, targetCustomer.coordinates, false, false, false, true);
-                      setTimeout(() => {
-                        setFlightsModalCustomerId(targetCustomer.id);
-                        setShowFlightsModal(true);
-                      }, TIMEOUTS.FLIGHT_SEARCH_DELAY);
-              } else if (hasFlights) {
-                logger.debug('FlightSearch', 'Flights exist, refreshing to ensure latest airports are used...');
-                setFlights(prev => {
-                  const updated = { ...prev };
-                  delete updated[targetCustomer.id];
-                  return updated;
-                });
-                await fetchTravelOptions(targetCustomer.id, targetCustomer.coordinates, false, false, false, true);
+              // If flights exist, just open the modal with cached flights (no new search)
+              if (hasFlights) {
+                logger.debug('FlightSearch', 'Opening modal with cached flights for customer:', targetCustomer.id);
                 setFlightsModalCustomerId(targetCustomer.id);
                 setShowFlightsModal(true);
+              } else if (!isSearching && targetCustomer.coordinates) {
+                // Only search if no flights exist and not currently searching
+                logger.debug('FlightSearch', 'No cached flights, triggering search for customer:', targetCustomer.id);
+                await fetchTravelOptions(targetCustomer.id, targetCustomer.coordinates, false, false, false, true);
+                setTimeout(() => {
+                  setFlightsModalCustomerId(targetCustomer.id);
+                  setShowFlightsModal(true);
+                }, TIMEOUTS.FLIGHT_SEARCH_DELAY);
               } else if (isSearching) {
-                alert('Flight search in progress. Please wait...');
+                // If search is in progress, open modal anyway - it will show loading state
+                logger.debug('FlightSearch', 'Search in progress, opening modal to show progress');
+                setFlightsModalCustomerId(targetCustomer.id);
+                setShowFlightsModal(true);
               } else {
                 alert('No flights found. Please ensure customer address is set.');
               }

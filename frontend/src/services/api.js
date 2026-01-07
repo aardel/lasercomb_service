@@ -184,5 +184,42 @@ export const distanceAPI = {
 };
 
 
+// Rates API
+export const ratesAPI = {
+  getAll: () => api.get('/api/rates'),
+  getById: (id) => api.get(`/api/rates/${id}`),
+  getByCountryCode: (code, city) => api.get(`/api/rates/country/${code}`, { params: { city } })
+};
+
+// Exchange Rates API
+export const exchangeRatesAPI = {
+  getRate: (base, target) => api.get('/api/exchange-rates', { params: { base, target } })
+};
+
+// Expense API
+export const expensesAPI = {
+  getAll: (params) => api.get('/api/expenses', { params }),
+  getById: (id) => api.get(`/api/expenses/${id}`),
+  getByInvoiceNumber: (invoiceNumber) => api.get(`/api/expenses/invoice/${invoiceNumber}`),
+  getByTripName: (tripName) => api.get(`/api/expenses/trip/${tripName}`),
+  create: (data) => api.post('/api/expenses', data),
+  update: (id, data) => api.put(`/api/expenses/${id}`, data),
+  delete: (id) => api.delete(`/api/expenses/${id}`),
+  calculateSegment: (data) => api.post('/api/expenses/calculate-segment', data),
+  getRatesInfo: () => api.get('/api/expenses/rates-info'),
+  getSettings: (technicianId) => api.get('/api/expenses/settings', { params: { technician_id: technicianId } }),
+  saveSettings: (data) => api.post('/api/expenses/settings', data)
+};
+
+// Receipt Scanning API
+export const receiptScanningAPI = {
+  getQRCode: (expenseId, receiptNumber) => api.get(`/api/receipt-scanning/qr/${expenseId}/${receiptNumber}`),
+  getSessionStatus: (sessionToken) => api.get(`/api/receipt-scanning/session/${sessionToken}`),
+  uploadImage: (expenseId, receiptNumber, formData) => api.post(`/api/receipt-scanning/upload/${expenseId}/${receiptNumber}`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  getImage: (expenseId, receiptNumber) => api.get(`/api/receipt-scanning/image/${expenseId}/${receiptNumber}`, { responseType: 'blob' })
+};
+
 export default api;
 

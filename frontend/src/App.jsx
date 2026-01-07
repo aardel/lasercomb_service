@@ -5,6 +5,7 @@ import TripsPage from './pages/TripsPage';
 import TripWizardPage from './pages/TripWizardPage';
 import TripDetailsPage from './pages/TripDetailsPage';
 import SettingsPage from './pages/SettingsPage';
+import ExpenseSubmissionPage from './pages/ExpenseSubmissionPage';
 import './App.css';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/trips/wizard" element={<TripWizardPage />} />
             <Route path="/trips/:id" element={<TripDetailsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/expenses" element={<ExpenseSubmissionPage />} />
           </Routes>
         </main>
       </div>

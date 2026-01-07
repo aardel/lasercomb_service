@@ -1,0 +1,122 @@
+.daily-rates-tab {
+  padding: 20px;
+}
+
+.tab-header {
+  margin-bottom: 20px;
+}
+
+.tab-header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.search-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.search-wrapper label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  min-width: 60px;
+}
+
+.search-wrapper input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.search-wrapper input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.rates-table-container {
+  overflow-x: auto;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.rates-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rates-table thead {
+  background: #f3f4f6;
+  position: sticky;
+  top: 0;
+}
+
+.rates-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #666;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.rate-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rate-header .sub-header {
+  font-size: 10px;
+  font-weight: 500;
+  color: #999;
+}
+
+.rates-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.rates-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.city-name {
+  color: #666;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.rate-value {
+  text-align: right;
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+}

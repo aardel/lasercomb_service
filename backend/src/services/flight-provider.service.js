@@ -20,13 +20,18 @@ async function searchWithSerper(params) {
 
   console.log(`[FlightProvider] Searching with Serper: ${params.origin} → ${params.destination}`);
 
-  const url = 'https://google.serper.dev/flights';
+  // Serper uses the /search endpoint with engine parameter
+  const url = 'https://google.serper.dev/search';
 
   const searchParams = {
+    q: `flights from ${params.origin} to ${params.destination}`,
+    engine: 'google_flights',
     departure_id: params.origin,
     arrival_id: params.destination,
     outbound_date: params.departureDate,
-    type: params.returnDate ? 'round_trip' : 'one_way'
+    type: params.returnDate ? 1 : 2, // type=1 for round-trip, type=2 for one-way
+    gl: 'us',
+    hl: 'en'
   };
 
   if (params.returnDate) {

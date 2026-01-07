@@ -15,12 +15,17 @@ app.use(cors({
     'http://localhost:3002',
     'http://localhost:3003',
     'http://localhost:5173',
-    'http://localhost:5174'
+    'http://localhost:5174',
+    'http://192.168.1.75:3001',
+    'http://192.168.1.75:5173'
   ].filter(Boolean)
 }));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files (receipt scanner page)
+app.use(express.static('public'));
 
 // Health check
 app.get('/health', (req, res) => {
@@ -98,7 +103,19 @@ app.use('/api/tolls', tollRoutes);
 
 // Distance routes
 const distanceRoutes = require('./routes/distance.routes');
+
+// Expense routes
+const expenseRoutes = require('./routes/expense.routes');
+app.use('/api/expenses', expenseRoutes);
+
+// Exchange rates routes
+const exchangeRatesRoutes = require('./routes/exchange-rates.routes');
+app.use('/api/exchange-rates', exchangeRatesRoutes);
 app.use('/api/distance', distanceRoutes);
+
+// Receipt scanning routes (QR code, WebSocket, file upload)
+const receiptScanningRoutes = require('./routes/receipt-scanning.routes');
+app.use('/api/receipt-scanning', receiptScanningRoutes);
 
 // Technician routes
 const technicianRoutes = require('./routes/technician.routes');
@@ -149,10 +166,14 @@ process.on('unhandledRejection', (reason, promise) => {
 
 const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0'; // Bind to all IPv4 interfaces to ensure browser compatibility
-app.listen(PORT, HOST, () => {
+const server = app.listen(PORT, HOST, () => {
   console.log(`🚀 Server running on http://${HOST}:${PORT}`);
   console.log(`   Accessible at: http://localhost:${PORT}`);
 });
+
+// Initialize WebSocket server for receipt scanning
+const webSocketServerService = require('./services/websocket-server.service');
+webSocketServerService.initialize(server);
 
 module.exports = app;
 
