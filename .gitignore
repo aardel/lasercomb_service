@@ -2,10 +2,21 @@
 node_modules/
 package-lock.json
 
-# Environment variables
+# Environment variables (COMPREHENSIVE - prevents .env exposure)
 .env
+.env.*
+!.env.example
+*.env
+*.env.*
+.env.bak
+.env.backup
+.env.old
+.env.orig
 .env.local
-.env.*.local
+.env.production
+.env.development
+.env.test
+.env.staging
 
 # API Keys Documentation (DO NOT COMMIT)
 **/API keys/API_KEYS.txt
@@ -25,9 +36,6 @@ build/
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
 
 # OS
 .DS_Store
@@ -42,5 +50,27 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 
-# Backups
+# Backups (prevents accidental backup file commits)
 backups/
+*.bak
+*.backup
+*.old
+*.orig
+*~
+*.swp
+*.swo
+
+# Debug files (prevents sensitive debug data exposure)
+*_debug.*
+*_test.*
+debug_*.json
+debug_*.log
+test_data_*.json
+hotel_debug.json
+
+# Sensitive data directories
+secrets/
+credentials/
+*_credentials.*
+*_secrets.*
+api_keys.*
